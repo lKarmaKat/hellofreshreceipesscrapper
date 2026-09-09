@@ -22,13 +22,12 @@ Pour autoriser une modification, dire à Claude d'**"appliquer"** ou d'**"edit"*
 - `script.js` dépend de JSZip (chargé via `@require` CDN) et des API `GM_*` (Tampermonkey/Violentmonkey).
 - L'appel à l'API détail recette (`/gw/recipes/recipes/{id}`) nécessite un token Bearer valide (~30 min de durée de vie), à renseigner dans `ACCESS_TOKEN` en haut du fichier (jetable, ne pas commiter de vrai token).
 - Les images sont reconstruites via `media.hellofresh.com` (préfixe `recipes` pour l'image principale, `hellofresh_s3` pour les étapes) plutôt que via les URLs Cloudfront renvoyées par l'API, qui étaient peu fiables (502).
-- **Cuisines** : le champ `cuisine` du frontmatter contient un ou plusieurs slugs anglais séparés par `, ` (ex. `cuisine: mexican, italian`). Les slugs proviennent en priorité de `recipe.cuisines[].type` de la réponse *menu* (déjà sous forme de slug quand présent), complétés par `cuisines[].slug` de la réponse *détail* ; en dernier recours, `slugify(name)` (cas des cuisines sans `type` dans le menu : « American », « Middle Eastern »…). La réponse *menu* est aussi la seule source du libellé FR localisé (« Mexicaine », « Japonaise ») — non stocké dans le `.md` actuel, mais récupérable si le visualiseur en a besoin.
-
-- **Changements `script.js` prévus (non encore appliqués)** :
-  - capturer `recipe.cuisines` dès l'interception du menu (dans `recettesInterceptees`), pas seulement au moment du détail ;
-  - `construireFrontmatter()` : remplacer `cuisine: <1er type>` par la fusion menu + détail décrite ci-dessus (slugs séparés par `, `) ;
-  - émettre `source: hellofresh` dans le frontmatter ;
-  - listes vides : émettre `tags: []` / omettre la clé plutôt que `  - []`.
+- **Cuisines** : le champ `cuisine` du frontmatter contient un ou plusieurs slugs anglais séparés par `, ` (ex. `cuisine: mexican, italian`). `construireCuisines()` (dans `script.js`) fusionne deux sources et déduplique via un `Set` :
+  - réponse *menu* (`recipe.cuisines[]`, capturée dans `recettesInterceptees` dès l'interception) — forme `{ name, type }`, `{ name }` ou parfois `{ name, type }` avec `type` = copie du nom anglais ;
+  - réponse *détail* (`cuisines[]`) — forme `{ id, type, name, slug, iconLink }`.
+  - **Aucune valeur n'est un slug fiable telle quelle** : le `type` du menu est tantôt un vrai slug (`mexican`), tantôt le nom anglais capitalisé (`Moroccan`), tantôt absent (`American`, `Middle Eastern`). Tout passe donc par `slugify()`. Valeur retenue par entrée : `slug` (détail) > `type` > `name`.
+  - Les données HelloFresh ont leurs propres incohérences qui ressortent telles quelles : `fusion` **et** `fusion-cuisine` coexistent, `vietnamise` (sic). À normaliser côté visualiseur si besoin, pas dans le scraper.
+  - Le libellé FR localisé (« Mexicaine », « Japonaise ») n'existe que dans la réponse *menu* — non stocké dans le `.md`, mais récupérable si le visualiseur en a besoin.
 
 ## Format des recettes : dossier `recettes/`
 
@@ -89,7 +88,7 @@ Le scraper émet une sortie régulière — mais le parser **ne doit pas en dép
 - `cuisine` : slugs anglais séparés par `, ` (jamais une liste YAML) ;
 - `tags` / `ingredients` : objets inline sur une ligne `- { nom: "…", type: … }` ;
 - `allergenes` : un slug par ligne ;
-- listes vides : `script.js` écrit aujourd'hui `  - []` — **à corriger** en `tags: []` (ou en omettant la clé), car `- []` se parse comme « liste contenant une liste vide » avec un vrai parser YAML.
+- listes vides : `script.js` écrit `tags: []` sur une seule ligne (helper `blocListe`). L'ancien sentinelle `  - []` se parsait comme « liste contenant une liste vide » avec un vrai parser YAML — ne pas le réintroduire.
 
 ### Recette manuelle — minimum viable
 
@@ -140,6 +139,6 @@ Si la mise à l'échelle automatique par portions devient nécessaire, ajouter d
 
 Ces fichiers ne sont pas exécutés ; ce sont des captures servant de référence pour connaître la forme exacte des réponses de l'API HelloFresh et adapter le code de scraping/parsing en conséquence.
 
-- **`menu.json`** — Exemple de réponse interceptée par `unsafeWindow.fetch` dans `script.js` (la requête "menu" identifiée par la présence d'un champ `meals[]`). Contient `id`, `week`, et `meals[]` où chaque meal a un `recipe` avec `id`, `name`, `headline`, `image`, `websiteURL`, `tags`, `nutrition`, `cuisines`, etc. C'est cette réponse qui alimente `recettesInterceptees` (id + nom + semaine, **et cuisines** à capturer aussi) avant l'appel détail. `recipe.cuisines[]` : au plus une entrée par recette dans l'échantillon, forme `{ name: "Mexicaine", type: "mexican" }` (nom FR localisé + slug) ou parfois `{ name: "American" }` seul (nom anglais, sans `type`).
+- **`menu.json`** — Exemple de réponse interceptée par `unsafeWindow.fetch` dans `script.js` (la requête "menu" identifiée par la présence d'un champ `meals[]`). Contient `id`, `week`, et `meals[]` où chaque meal a un `recipe` avec `id`, `name`, `headline`, `image`, `websiteURL`, `tags`, `nutrition`, `cuisines`, etc. C'est cette réponse qui alimente `recettesInterceptees` (id + nom + semaine + `cuisines`) avant l'appel détail. `recipe.cuisines[]` : au plus une entrée par recette dans l'échantillon, forme `{ name: "Mexicaine", type: "mexican" }` (nom FR localisé + slug) ou parfois `{ name: "American" }` seul (nom anglais, sans `type`).
 - **`receipe_request.js`** — Exemple de requête `fetch` construite manuellement (format DevTools "Copy as fetch") vers `/gw/recipes/recipes/{id}?country=FR&locale=fr-FR`, avec les headers nécessaires (notamment `authorization: Bearer ...` et `x-requested-by: shopping-experience-web`). Sert de référence pour `fetchDetailRecette()` dans `script.js`.
 - **`receipe_response.json`** — Exemple de réponse détail recette renvoyée par l'endpoint ci-dessus. Contient la structure complète utilisée par `construireFrontmatter()` / `construireCorps()` dans `script.js` : `ingredients[]`, `yields[]` (quantités par nombre de portions), `steps[]` (instructions + `images[]` avec `path`/`caption`), `nutrition[]`, `tags[]`, `allergens[]`, `utensils[]`, `totalTime`/`prepTime` (format ISO 8601 `PTxxHxxM`), `cuisines[]` (forme `{ id, type, name, slug, iconLink }` — `slug` propre mais `name` souvent non localisé, ex. « Moroccan »), etc.

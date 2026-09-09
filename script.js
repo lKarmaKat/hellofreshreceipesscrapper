@@ -53,7 +53,15 @@
             i++;
           const r = meal.recipe;
           if (r?.id) {
-            unsafeWindow.recettesInterceptees.set(r.id, { id: r.id, nom: r.name, week: data.week });
+            // On capture `cuisines` dès le menu : la réponse détail donne un `slug`
+            // propre mais un `name` non localisé, le menu donne le libellé FR + souvent
+            // le slug (`type`). construireCuisines() fusionne les deux.
+            unsafeWindow.recettesInterceptees.set(r.id, {
+              id: r.id,
+              nom: r.name,
+              week: data.week,
+              cuisines: Array.isArray(r.cuisines) ? r.cuisines : []
+            });
           }
         }
         majBoutonExport();
@@ -206,6 +214,28 @@
       .replace(/^-+|-+$/g, '');
   }
 
+  // Fusionne les cuisines de la reponse detail et de la reponse menu en une liste
+  // de slugs anglais dedupliques, separes par ", " (ex. "mexican, italian").
+  // Cas frequent : une seule cuisine, voire aucune ("" => pas de filtre cuisine).
+  //
+  // Aucune source n'est fiable telle quelle : le `type` du menu est tantot un vrai
+  // slug ("mexican"), tantot une copie du nom anglais ("Moroccan"), tantot absent
+  // ("American", "Middle Eastern"). On passe donc tout par slugify(), et le Set
+  // deduplique menu + detail (ex. menu "Moroccan" + detail slug "moroccan").
+  // Priorite de la valeur retenue : slug detail > type > name.
+  function construireCuisines(detail, infosMenu) {
+    const slugs = new Set();
+    for (const c of infosMenu?.cuisines || []) {
+      const s = slugify(c.type || c.name || '');
+      if (s) slugs.add(s);
+    }
+    for (const c of detail?.cuisines || []) {
+      const s = slugify(c.slug || c.type || c.name || '');
+      if (s) slugs.add(s);
+    }
+    return [...slugs].join(', ');
+  }
+
   function parseDureeISO(iso) {
     const m = iso?.match(/PT(?:(\d+)H)?(?:(\d+)M)?/);
     if (!m) return null;
@@ -221,7 +251,7 @@
   }
 
   // ==================== CONSTRUCTION DU MARKDOWN ====================
-  function construireFrontmatter(recette, yieldChoisi) {
+  function construireFrontmatter(recette, yieldChoisi, infosMenu) {
     const calories = recette.nutrition.find((n) => n.unit === 'kcal')?.amount;
     const proteines = recette.nutrition.find((n) => n.name === 'Protéines')?.amount;
     const glucides = recette.nutrition.find((n) => n.name === 'Glucides')?.amount;
@@ -240,8 +270,14 @@
     const lignesTags = recette.tags.map((t) => `  - { nom: "${echapperYAML(t.name)}", type: ${t.type} }`);
     const lignesAllergenes = recette.allergens.map((a) => `  - ${a.type}`);
 
+    // Liste YAML : `cle:` + éléments quand non vide, sinon `cle: []` sur une seule
+    // ligne. L'ancien sentinelle `  - []` se parsait comme "liste contenant une
+    // liste vide" avec un vrai parser YAML (gray-matter / PyYAML).
+    const blocListe = (cle, elements) => (elements.length ? [`${cle}:`, ...elements] : [`${cle}: []`]);
+
     const lignes = [
       '---',
+      'source: hellofresh',
       `id: ${recette.id}`,
       `titre: "${echapperYAML(recette.name)}"`,
       `sous_titre: "${echapperYAML(recette.headline)}"`,
@@ -253,15 +289,12 @@
       `lipides_g: ${lipides ?? ''}`,
       `difficulte: ${recette.difficulty ?? ''}`,
       `portions: ${yieldChoisi.yields}`,
-      `cuisine: ${recette.cuisines?.[0]?.type || ''}`,
+      `cuisine: ${construireCuisines(recette, infosMenu)}`,
       'image_principale: images/hero.jpg',
       `url: "${echapperYAML(recette.websiteUrl)}"`,
-      'tags:',
-      ...(lignesTags.length ? lignesTags : ['  []']),
-      'allergenes:',
-      ...(lignesAllergenes.length ? lignesAllergenes : ['  []']),
-      'ingredients:',
-      ...(lignesIngredients.length ? lignesIngredients : ['  []']),
+      ...blocListe('tags', lignesTags),
+      ...blocListe('allergenes', lignesAllergenes),
+      ...blocListe('ingredients', lignesIngredients),
       '---',
       ''
     ];
@@ -330,7 +363,7 @@ let tailleTotale = 0; // déclarée avant la boucle sur idsAExporter
         const dossierImages = dossier.folder('images');
 
         const yieldChoisi = trouverYieldPourPortions(recette, PORTIONS_CIBLE);
-        const markdown = construireFrontmatter(recette, yieldChoisi) + construireCorps(recette);
+        const markdown = construireFrontmatter(recette, yieldChoisi, interceptees.get(id)) + construireCorps(recette);
         dossier.file('recette.md', markdown);
 if (typeof setImmediate === 'function') {
   setImmediate = (callback, ...args) => setTimeout(callback, 0, ...args);
