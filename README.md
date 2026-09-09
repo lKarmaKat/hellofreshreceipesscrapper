@@ -9,7 +9,7 @@ collection qui accepte aussi des recettes ajoutées à la main.
 |---|---|
 | `script.js` | Userscript (Tampermonkey) : intercepte les recettes sur hellofresh.fr, appelle l'API interne, exporte un zip `recette.md` + images par recette. |
 | `serveur/` | Serveur Flask local : lit `recettes/`, normalise, expose une API JSON + les images + le viewer. |
-| `viewer/` | *(à venir)* Page web pour parcourir / filtrer les recettes. Consomme l'API du serveur. |
+| `viewer/` | Page web (servie par le serveur sur `/`) : grille, recherche, filtres tags / cuisine, modale par recette. Vanilla JS + `marked`. |
 
 Le format des `recette.md` et les détails d'architecture sont dans [CLAUDE.md](CLAUDE.md).
 
@@ -52,7 +52,7 @@ python3 -m venv .venv
 .venv/bin/python serveur/app.py
 ```
 
-→ <http://127.0.0.1:8000>
+Puis ouvrir <http://127.0.0.1:8000> dans un navigateur — c'est le viewer.
 
 `Ctrl+C` pour arrêter. En local, le serveur redémarre tout seul quand on modifie `app.py`.
 

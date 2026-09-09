@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mes recettes</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+</head>
+<body>
+
+<header>
+  <h1>Mes recettes</h1>
+  <input type="search" id="recherche" placeholder="Rechercher (titre, sous-titre, ingrédients, tag)...">
+</header>
+
+<div id="erreurs" hidden></div>
+
+<div class="layout">
+  <aside class="filtres">
+    <button type="button" id="reset-filtres">Réinitialiser les filtres</button>
+
+    <div id="filtres-tags" class="groupe-filtre">
+      <h3>Tags</h3>
+    </div>
+
+    <div id="filtres-cuisines" class="groupe-filtre">
+      <h3>Cuisine</h3>
+    </div>
+  </aside>
+
+  <main>
+    <div class="compteur" id="compteur">Chargement…</div>
+    <div class="grille" id="grille"></div>
+  </main>
+</div>
+
+<div id="overlay">
+  <div id="modale">
+    <button type="button" id="fermer-modale" aria-label="Fermer">✕</button>
+    <div id="modale-contenu"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
