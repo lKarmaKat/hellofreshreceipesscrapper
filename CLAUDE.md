@@ -17,5 +17,13 @@ Pour autoriser une modification, dire à Claude d'**"appliquer"** ou d'**"edit"*
 ## Notes techniques
 
 - `script.js` dépend de JSZip (chargé via `@require` CDN) et des API `GM_*` (Tampermonkey/Violentmonkey).
-- L'appel à l'API détail recette (`/gw/recipes/recipes/{id}`) nécessite un token Bearer valide (~30 min de durée de vie), actuellement codé en dur dans `ACCESS_TOKEN` en haut du fichier.
+- L'appel à l'API détail recette (`/gw/recipes/recipes/{id}`) nécessite un token Bearer valide (~30 min de durée de vie), à renseigner dans `ACCESS_TOKEN` en haut du fichier (jetable, ne pas commiter de vrai token).
 - Les images sont reconstruites via `media.hellofresh.com` (préfixe `recipes` pour l'image principale, `hellofresh_s3` pour les étapes) plutôt que via les URLs Cloudfront renvoyées par l'API, qui étaient peu fiables (502).
+
+## Fichiers d'exemple (fixtures API HelloFresh)
+
+Ces fichiers ne sont pas exécutés ; ce sont des captures servant de référence pour connaître la forme exacte des réponses de l'API HelloFresh et adapter le code de scraping/parsing en conséquence.
+
+- **`menu.json`** — Exemple de réponse interceptée par `unsafeWindow.fetch` dans `script.js` (la requête "menu" identifiée par la présence d'un champ `meals[]`). Contient `id`, `week`, et `meals[]` où chaque meal a un `recipe` avec `id`, `name`, `headline`, `image`, `websiteURL`, `tags`, `nutrition`, `cuisines`, etc. C'est cette réponse qui alimente `recettesInterceptees` (id + nom + semaine) avant l'appel détail.
+- **`receipe_request.js`** — Exemple de requête `fetch` construite manuellement (format DevTools "Copy as fetch") vers `/gw/recipes/recipes/{id}?country=FR&locale=fr-FR`, avec les headers nécessaires (notamment `authorization: Bearer ...` et `x-requested-by: shopping-experience-web`). Sert de référence pour `fetchDetailRecette()` dans `script.js`.
+- **`receipe_response.json`** — Exemple de réponse détail recette renvoyée par l'endpoint ci-dessus. Contient la structure complète utilisée par `construireFrontmatter()` / `construireCorps()` dans `script.js` : `ingredients[]`, `yields[]` (quantités par nombre de portions), `steps[]` (instructions + `images[]` avec `path`/`caption`), `nutrition[]`, `tags[]`, `allergens[]`, `utensils[]`, `totalTime`/`prepTime` (format ISO 8601 `PTxxHxxM`), etc.

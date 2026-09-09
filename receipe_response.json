@@ -1,0 +1,932 @@
+{
+    "active": true,
+    "allergens": [
+        {
+            "id": "57962a07b7e8697d4b3052fe",
+            "name": "Graines de sésame",
+            "type": "sesame",
+            "slug": "graines-de-sesame",
+            "iconLink": "https://d3hvwccx09j84u.cloudfront.net/0,0/allergens/57962a07b7e8697d4b3052fe-feb8e168.png",
+            "iconPath": "/allergens/57962a07b7e8697d4b3052fe-feb8e168.png",
+            "triggersTracesOf": false,
+            "tracesOf": false
+        },
+        {
+            "id": "57962a07b7e8697d4b3052fd",
+            "name": "Moutarde",
+            "type": "mustard",
+            "slug": "moutarde",
+            "iconLink": "https://d3hvwccx09j84u.cloudfront.net/0,0/allergens/57962a07b7e8697d4b3052fd-feb8e168.png",
+            "iconPath": "/allergens/57962a07b7e8697d4b3052fd-feb8e168.png",
+            "triggersTracesOf": false,
+            "tracesOf": false
+        }
+    ],
+    "averageRating": 0,
+    "canonical": null,
+    "canonicalLink": null,
+    "cardLink": null,
+    "category": null,
+    "clonedFrom": "671680872afd696502eded12",
+    "comment": null,
+    "country": "FR",
+    "createdAt": "2026-06-19T12:24:25+00:00",
+    "cuisines": [
+        {
+            "id": "57ebbc17b7e8697d4b3053bb",
+            "type": "Moroccan",
+            "name": "Moroccan",
+            "slug": "moroccan",
+            "iconLink": "https://d3hvwccx09j84u.cloudfront.net/0,0/cuisines/57ebbc17b7e8697d4b3053bb-07eccc51.jpg"
+        }
+    ],
+    "description": "Notre bœuf est 100% origine France*.\n*En cas de problème d'approvisionnement nous favorisons des fournisseurs européens de qualité équivalente.",
+    "descriptionHTML": "\u003cp\u003eNotre bœuf est 100% origine France*.\n*En cas de problème d'approvisionnement nous favorisons des fournisseurs européens de qualité équivalente.\u003c/p\u003e",
+    "descriptionMarkdown": "Notre bœuf est 100% origine France*.\n*En cas de problème d'approvisionnement nous favorisons des fournisseurs européens de qualité équivalente.",
+    "difficulty": 2,
+    "favoritesCount": 3,
+    "headline": "avec du persil \u0026 des épices du Moyen-Orient",
+    "id": "6a352ebb4e4b173945bc7822",
+    "imageLink": "https://d3hvwccx09j84u.cloudfront.net/0,0/image/HF_Y25_R220_W38_FR_RFR23448-8_Main_remove_courgette_edit_high-fe148e87.jpg",
+    "imagePath": "/image/HF_Y25_R220_W38_FR_RFR23448-8_Main_remove_courgette_edit_high-fe148e87.jpg",
+    "ingredients": [
+        {
+            "id": "6405bff8b0da194777986443",
+            "uuid": "e5f7a84f-9f36-538d-af4e-3633bd6ec5d8",
+            "name": "Oignon",
+            "type": "onion",
+            "slug": "oignon",
+            "country": "FR",
+            "imageLink": "https://d3hvwccx09j84u.cloudfront.net/200,200/ingredient/6405bff8b0da194777986443-b1d2a8c8.png",
+            "imagePath": "/ingredient/6405bff8b0da194777986443-b1d2a8c8.png",
+            "shipped": true,
+            "allergens": [],
+            "family": {
+                "id": "6299e0f4f7cd25bc1c024384",
+                "uuid": "9996416b-db42-55fe-b207-53e1a696a180",
+                "name": "none",
+                "slug": "none",
+                "type": "none",
+                "priority": 0,
+                "iconLink": null,
+                "iconPath": null
+            },
+            "countriesOfOrigin": [
+                "UE",
+                "non UE"
+            ]
+        },
+        {
+            "id": "6405bff3b9d07cd5d38d7c6b",
+            "uuid": "81b3c69b-2097-5c00-baa8-2cf099ef66e8",
+            "name": "Poivron",
+            "type": "bell-pepper",
+            "slug": "poivron",
+            "country": "FR",
+            "imageLink": "https://d3hvwccx09j84u.cloudfront.net/200,200/ingredient/6405bff3b9d07cd5d38d7c6b-c005bcad.png",
+            "imagePath": "/ingredient/6405bff3b9d07cd5d38d7c6b-c005bcad.png",
+            "shipped": true,
+            "allergens": [],
+            "family": {
+                "id": "6299e0f4f7cd25bc1c024384",
+                "uuid": "9996416b-db42-55fe-b207-53e1a696a180",
+                "name": "none",
+                "slug": "none",
+                "type": "none",
+                "priority": 0,
+                "iconLink": null,
+                "iconPath": null
+            },
+            "countriesOfOrigin": [
+                "UE",
+                "FR"
+            ]
+        },
+        {
+            "id": "6405bf95b0da1947779862f8",
+            "uuid": "88253f9b-1a28-5a16-8fb2-0ef3494216fd",
+            "name": "Persil",
+            "type": "flat-leaf-parsley",
+            "slug": "persil",
+            "country": "FR",
+            "imageLink": "https://d3hvwccx09j84u.cloudfront.net/200,200/ingredient/6405bf95b0da1947779862f8-3f0928f1.png",
+            "imagePath": "/ingredient/6405bf95b0da1947779862f8-3f0928f1.png",
+            "shipped": true,
+            "allergens": [],
+            "family": {
+                "id": "6299e0f4f7cd25bc1c024384",
+                "uuid": "9996416b-db42-55fe-b207-53e1a696a180",
+                "name": "none",
+                "slug": "none",
+                "type": "none",
+                "priority": 0,
+                "iconLink": null,
+                "iconPath": null
+            },
+            "countriesOfOrigin": [
+                "UE",
+                "FR"
+            ]
+        },
+        {
+            "id": "686bd9ac700c002ea1507ade",
+            "uuid": "8b6497d0-fd64-4873-98ae-bbdedef0635c",
+            "name": "Gousse d'ail",
+            "type": "garlic-clove",
+            "slug": "gousse-dail",
+            "country": "FR",
+            "imageLink": "https://d3hvwccx09j84u.cloudfront.net/200,200/ingredient/686bd9ac700c002ea1507ade-991a807f.png",
+            "imagePath": "/ingredient/686bd9ac700c002ea1507ade-991a807f.png",
+            "shipped": true,
+            "allergens": [],
+            "family": {
+                "id": "6299e0f4f7cd25bc1c024384",
+                "uuid": "9996416b-db42-55fe-b207-53e1a696a180",
+                "name": "none",
+                "slug": "none",
+                "type": "none",
+                "priority": 0,
+                "iconLink": null,
+                "iconPath": null
+            },
+            "countriesOfOrigin": [
+                "UE",
+                "FR"
+            ]
+        },
+        {
+            "id": "6405c017b0da1947779864a9",
+            "uuid": "30ed0e56-b62d-4efe-bf0b-d8fb0c16a208",
+            "name": "Épices du Moyen-Orient",
+            "type": "middle-eastern-spice-blend",
+            "slug": "epices-du-moyen-orient",
+            "country": "FR",
+            "imageLink": "https://d3hvwccx09j84u.cloudfront.net/200,200/ingredient/6405c017b0da1947779864a9-9c135ec2.png",
+            "imagePath": "/ingredient/6405c017b0da1947779864a9-9c135ec2.png",
+            "shipped": true,
+            "allergens": [],
+            "family": {
+                "id": "6299e0f4f7cd25bc1c024384",
+                "uuid": "9996416b-db42-55fe-b207-53e1a696a180",
+                "name": "none",
+                "slug": "none",
+                "type": "none",
+                "priority": 0,
+                "iconLink": null,
+                "iconPath": null
+            }
+        },
+        {
+            "id": "67644b3e9905c923d7fd39b7",
+            "uuid": "edb45406-e818-56a4-b9b9-2022a79d3087",
+            "name": "Viande hachée au bœuf",
+            "type": "beef-mince",
+            "slug": "viande-hachee-au-boeuf",
+            "country": "FR",
+            "imageLink": "https://d3hvwccx09j84u.cloudfront.net/200,200/ingredient/67644b3e9905c923d7fd39b7-fb4b6314.png",
+            "imagePath": "/ingredient/67644b3e9905c923d7fd39b7-fb4b6314.png",
+            "shipped": true,
+            "allergens": [],
+            "family": {
+                "id": "6299e0f4f7cd25bc1c024384",
+                "uuid": "9996416b-db42-55fe-b207-53e1a696a180",
+                "name": "none",
+                "slug": "none",
+                "type": "none",
+                "priority": 0,
+                "iconLink": null,
+                "iconPath": null
+            }
+        },
+        {
+            "id": "69f9baedb066be2fe1b53723",
+            "uuid": "f716b47a-0580-571c-9283-c3ec4ecb3a60",
+            "name": "Houmous",
+            "type": "hummus",
+            "slug": "houmous",
+            "country": "FR",
+            "imageLink": "https://d3hvwccx09j84u.cloudfront.net/200,200/ingredient/6405bf5fb0da194777986232-ade0b90d.png",
+            "imagePath": "/ingredient/6405bf5fb0da194777986232-ade0b90d.png",
+            "shipped": true,
+            "allergens": [
+                "57962a07b7e8697d4b3052fe",
+                "57962a07b7e8697d4b3052fd"
+            ],
+            "family": {
+                "id": "6299e0f4f7cd25bc1c024384",
+                "uuid": "9996416b-db42-55fe-b207-53e1a696a180",
+                "name": "none",
+                "slug": "none",
+                "type": "none",
+                "priority": 0,
+                "iconLink": null,
+                "iconPath": null
+            }
+        },
+        {
+            "id": "63e51218bc1d64f7b96e2702",
+            "uuid": "d5624e89-38aa-4d02-8bd1-333aa3192369",
+            "name": "Huile de tournesol",
+            "type": "huile-de-tournesol-cc",
+            "slug": "huile-de-tournesol",
+            "country": "FR",
+            "imageLink": "https://d3hvwccx09j84u.cloudfront.net/200,200/ingredient/63e51218bc1d64f7b96e2702-a20c23fe.png",
+            "imagePath": "/ingredient/63e51218bc1d64f7b96e2702-a20c23fe.png",
+            "shipped": false,
+            "allergens": [],
+            "family": {
+                "id": "6299e0f4f7cd25bc1c024384",
+                "uuid": "9996416b-db42-55fe-b207-53e1a696a180",
+                "name": "none",
+                "slug": "none",
+                "type": "none",
+                "priority": 0,
+                "iconLink": null,
+                "iconPath": null
+            }
+        },
+        {
+            "id": "63e51222bc1d64f7b96e2706",
+            "uuid": "20753613-c24c-4be3-8db9-33d72ce69106",
+            "name": "Lait",
+            "type": "lait-cs",
+            "slug": "lait",
+            "country": "FR",
+            "imageLink": "https://d3hvwccx09j84u.cloudfront.net/200,200/ingredient/63e51222bc1d64f7b96e2706-41a6e6ea.png",
+            "imagePath": "/ingredient/63e51222bc1d64f7b96e2706-41a6e6ea.png",
+            "shipped": false,
+            "allergens": [],
+            "family": {
+                "id": "6299e0f4f7cd25bc1c024384",
+                "uuid": "9996416b-db42-55fe-b207-53e1a696a180",
+                "name": "none",
+                "slug": "none",
+                "type": "none",
+                "priority": 0,
+                "iconLink": null,
+                "iconPath": null
+            }
+        },
+        {
+            "id": "63e5122b81b4b295e66f025e",
+            "uuid": "9481dcd8-7825-4a7a-8b7f-1d2171de985d",
+            "name": "Poivre et sel",
+            "type": "poivre-et-sel-au-gout",
+            "slug": "poivre-et-sel",
+            "country": "FR",
+            "imageLink": "https://d3hvwccx09j84u.cloudfront.net/200,200/ingredient/63e5122b81b4b295e66f025e-b135bada.png",
+            "imagePath": "/ingredient/63e5122b81b4b295e66f025e-b135bada.png",
+            "shipped": false,
+            "allergens": [],
+            "family": {
+                "id": "6299e0f4f7cd25bc1c024384",
+                "uuid": "9996416b-db42-55fe-b207-53e1a696a180",
+                "name": "none",
+                "slug": "none",
+                "type": "none",
+                "priority": 0,
+                "iconLink": null,
+                "iconPath": null
+            }
+        }
+    ],
+    "isAddon": false,
+    "isComplete": null,
+    "isPublished": true,
+    "label": {
+        "text": "Super Rapide",
+        "handle": "super-quick",
+        "foregroundColor": "#FFFFFF",
+        "backgroundColor": "#1A5DB6",
+        "displayLabel": true
+    },
+    "link": "https://hellofresh.com/recipes/6a352ebb4e4b173945bc7822",
+    "name": "Keftas de bœuf, houmous \u0026 légumes de saison",
+    "nutrition": [
+        {
+            "type": "57b42a48b7e8697d4b30530d",
+            "name": "Énergie (kJ)",
+            "amount": 1886,
+            "unit": "kJ"
+        },
+        {
+            "type": "57b42a48b7e8697d4b305304",
+            "name": "Énergie (kcal)",
+            "amount": 451,
+            "unit": "kcal"
+        },
+        {
+            "type": "57b42a48b7e8697d4b305307",
+            "name": "Matières grasses",
+            "amount": 27.8,
+            "unit": "g"
+        },
+        {
+            "type": "57b42a48b7e8697d4b305308",
+            "name": "dont acides gras saturés",
+            "amount": 8.4,
+            "unit": "g"
+        },
+        {
+            "type": "57b42a48b7e8697d4b305305",
+            "name": "Glucides",
+            "amount": 22.3,
+            "unit": "g"
+        },
+        {
+            "type": "57b42a48b7e8697d4b305306",
+            "name": "dont sucres",
+            "amount": 16.3,
+            "unit": "g"
+        },
+        {
+            "type": "57b42a48b7e8697d4b30530a",
+            "name": "Fibres alimentaires",
+            "amount": 9.7,
+            "unit": "g"
+        },
+        {
+            "type": "57b42a48b7e8697d4b305309",
+            "name": "Protéines",
+            "amount": 26.2,
+            "unit": "g"
+        },
+        {
+            "type": "57b42a48b7e8697d4b30530b",
+            "name": "Sel",
+            "amount": 2.24,
+            "unit": "g"
+        }
+    ],
+    "prepTime": "PT45M",
+    "promotion": null,
+    "ratingsCount": 0,
+    "seoDescription": null,
+    "seoName": null,
+    "servingSize": 467,
+    "slug": "keftas-de-boeuf-houmous-and-legumes-de-saison",
+    "steps": [
+        {
+            "index": 1,
+            "instructions": "\nVeillez à bien respecter les quantités indiquées à gauche pour préparer votre recette !\nPréchauffez le four à 210°C (190°C chaleur tournante).\nCoupez l'oignon en fines demi-lunes et les poivrons en fines lanières. \nEffeuillez et ciselez le persil. Ciselez finement la moitié de l'ail. \n",
+            "instructionsHTML": "\u003cul\u003e\n\u003cli\u003eVeillez à bien respecter les quantités indiquées à gauche pour préparer votre recette !\u003c/li\u003e\n\u003cli\u003ePréchauffez le four à 210°C (190°C chaleur tournante).\u003c/li\u003e\n\u003cli\u003eCoupez l\u0026#39;\u003cstrong\u003eoignon\u003c/strong\u003e en fines demi-lunes et les \u003cstrong\u003epoivrons\u003c/strong\u003e en fines lanières. \u003c/li\u003e\n\u003cli\u003eEffeuillez et ciselez le \u003cstrong\u003epersil.\u003c/strong\u003e Ciselez finement la moitié de l\u0026#39;\u003cstrong\u003eail\u003c/strong\u003e. \u003c/li\u003e\n\u003c/ul\u003e",
+            "instructionsMarkdown": "\u003cul\u003e\n\u003cli\u003eVeillez à bien respecter les quantités indiquées à gauche pour préparer votre recette !\u003c/li\u003e\n\u003cli\u003ePréchauffez le four à 210°C (190°C chaleur tournante).\u003c/li\u003e\n\u003cli\u003eCoupez l\u0026#39;\u003cstrong\u003eoignon\u003c/strong\u003e en fines demi-lunes et les \u003cstrong\u003epoivrons\u003c/strong\u003e en fines lanières. \u003c/li\u003e\n\u003cli\u003eEffeuillez et ciselez le \u003cstrong\u003epersil.\u003c/strong\u003e Ciselez finement la moitié de l\u0026#39;\u003cstrong\u003eail\u003c/strong\u003e. \u003c/li\u003e\n\u003c/ul\u003e",
+            "ingredients": [],
+            "utensils": [],
+            "timers": [],
+            "images": [
+                {
+                    "link": "https://d3hvwccx09j84u.cloudfront.net/0,0/6a352ebb4e4b173945bc7822/step-6dbb6d00.jpg",
+                    "path": "/6a352ebb4e4b173945bc7822/step-6dbb6d00.jpg",
+                    "caption": "Opération découpe !"
+                }
+            ],
+            "videos": []
+        },
+        {
+            "index": 2,
+            "instructions": "\nPlacez les poivrons et la gousse d'ail non ciselée sur une plaque recouverte de papier sulfurisé.\nAjoutez, par personne : ½ cc d'épices du Moyen-Orient (ça pique ! Dosez-les selon votre goût). Arrosez d’un mince filet d'huile de tournesol, salez et poivrez. Mélangez.\n\nMAKE IT AIRFRYER : Placez les légumes dans le panier avec un filet d’huile d’olive, les épices, du sel et du poivre. Faites cuire 12-15 min à 180°C, en secouant le panier toutes les 5-6 min.",
+            "instructionsHTML": "\u003cul\u003e\n\u003cli\u003ePlacez les \u003cstrong\u003epoivrons\u003c/strong\u003e et la \u003cstrong\u003egousse d\u0026#39;ail\u003c/strong\u003e non ciselée sur une plaque recouverte de papier sulfurisé.\u003c/li\u003e\n\u003cli\u003eAjoutez, par personne : ½ cc d\u0026#39;\u003cstrong\u003eépices du\u003c/strong\u003e \u003cstrong\u003eMoyen-Orient \u003c/strong\u003e(ça pique ! Dosez-les selon votre goût). Arrosez d’un mince filet d\u0026#39;huile de tournesol, salez et poivrez. Mélangez.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cspan style=\"color: rgb(150, 220, 20)\"\u003e\u003cstrong\u003eMAKE IT AIRFRYER\u003c/strong\u003e\u003c/span\u003e : Placez les légumes dans le panier avec un filet d’huile d’olive, les épices, du sel et du poivre. Faites cuire 12-15 min à 180°C, en secouant le panier toutes les 5-6 min.\u003c/p\u003e",
+            "instructionsMarkdown": "\u003cul\u003e\n\u003cli\u003ePlacez les \u003cstrong\u003epoivrons\u003c/strong\u003e et la \u003cstrong\u003egousse d\u0026#39;ail\u003c/strong\u003e non ciselée sur une plaque recouverte de papier sulfurisé.\u003c/li\u003e\n\u003cli\u003eAjoutez, par personne : ½ cc d\u0026#39;\u003cstrong\u003eépices du\u003c/strong\u003e \u003cstrong\u003eMoyen-Orient \u003c/strong\u003e(ça pique ! Dosez-les selon votre goût). Arrosez d’un mince filet d\u0026#39;huile de tournesol, salez et poivrez. Mélangez.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cspan style=\"color: rgb(150, 220, 20)\"\u003e\u003cstrong\u003eMAKE IT AIRFRYER\u003c/strong\u003e\u003c/span\u003e : Placez les légumes dans le panier avec un filet d’huile d’olive, les épices, du sel et du poivre. Faites cuire 12-15 min à 180°C, en secouant le panier toutes les 5-6 min.\u003c/p\u003e",
+            "ingredients": [],
+            "utensils": [
+                "5e3ad24dfcf61c18c30ff522"
+            ],
+            "timers": [],
+            "images": [
+                {
+                    "link": "https://d3hvwccx09j84u.cloudfront.net/0,0/6a352ebb4e4b173945bc7822/step-a8cd5e10.jpg",
+                    "path": "/6a352ebb4e4b173945bc7822/step-a8cd5e10.jpg",
+                    "caption": "Un tour au four"
+                }
+            ],
+            "videos": []
+        },
+        {
+            "index": 3,
+            "instructions": "\nEnfournez les légumes 10 min dans la partie haute du four.\nAu bout de 10 min de cuisson des légumes, ajoutez les oignons sur la plaque de cuisson avec un mince filet d'huile de tournesol, du sel et du poivre. Prolongez la cuisson de 15-20 min, ou jusqu'à ce que la pointe d'un couteau rentre facilement dans les légumes.\n",
+            "instructionsHTML": "\u003cul\u003e\n\u003cli\u003eEnfournez les légumes 10 min dans la partie haute du four.\u003c/li\u003e\n\u003cli\u003eAu bout de 10 min de cuisson des légumes, ajoutez les \u003cstrong\u003eoignons\u003c/strong\u003e sur la plaque de cuisson avec un mince filet d\u0026#39;huile de tournesol, du sel et du poivre. Prolongez la cuisson de 15-20 min, ou jusqu\u0026#39;à ce que la pointe d\u0026#39;un couteau rentre facilement dans les légumes.\u003c/li\u003e\n\u003c/ul\u003e",
+            "instructionsMarkdown": "\u003cul\u003e\n\u003cli\u003eEnfournez les légumes 10 min dans la partie haute du four.\u003c/li\u003e\n\u003cli\u003eAu bout de 10 min de cuisson des légumes, ajoutez les \u003cstrong\u003eoignons\u003c/strong\u003e sur la plaque de cuisson avec un mince filet d\u0026#39;huile de tournesol, du sel et du poivre. Prolongez la cuisson de 15-20 min, ou jusqu\u0026#39;à ce que la pointe d\u0026#39;un couteau rentre facilement dans les légumes.\u003c/li\u003e\n\u003c/ul\u003e",
+            "ingredients": [],
+            "utensils": [],
+            "timers": [],
+            "images": [
+                {
+                    "link": "https://d3hvwccx09j84u.cloudfront.net/0,0/6a352ebb4e4b173945bc7822/step-e8c9bc20.jpg",
+                    "path": "/6a352ebb4e4b173945bc7822/step-e8c9bc20.jpg",
+                    "caption": "Les oignons s’ajoutent"
+                }
+            ],
+            "videos": []
+        },
+        {
+            "index": 4,
+            "instructions": "\nPendant ce temps, dans un saladier, mélangez le bœuf avec l'ail ciselé, ⅓ de persil, ½ cc d'épices du Moyen-Orient, du sel et du poivre. Versez un petit filet de lait.\nAvec vos mains, formez 3 petites boulettes allongées et légèrement aplaties par personne.\n",
+            "instructionsHTML": "\u003cul\u003e\n\u003cli\u003ePendant ce temps, dans un saladier, mélangez le \u003cstrong\u003ebœuf\u003c/strong\u003e avec l\u0026#39;\u003cstrong\u003eail \u003c/strong\u003eciselé, ⅓ de \u003cstrong\u003epersil\u003c/strong\u003e, ½ cc d\u0026#39;\u003cstrong\u003eépices du Moyen-Orient\u003c/strong\u003e, du sel et du poivre. Versez un petit filet de lait.\u003c/li\u003e\n\u003cli\u003eAvec vos mains, formez 3 petites boulettes allongées et légèrement aplaties par personne.\u003c/li\u003e\n\u003c/ul\u003e",
+            "instructionsMarkdown": "\u003cul\u003e\n\u003cli\u003ePendant ce temps, dans un saladier, mélangez le \u003cstrong\u003ebœuf\u003c/strong\u003e avec l\u0026#39;\u003cstrong\u003eail \u003c/strong\u003eciselé, ⅓ de \u003cstrong\u003epersil\u003c/strong\u003e, ½ cc d\u0026#39;\u003cstrong\u003eépices du Moyen-Orient\u003c/strong\u003e, du sel et du poivre. Versez un petit filet de lait.\u003c/li\u003e\n\u003cli\u003eAvec vos mains, formez 3 petites boulettes allongées et légèrement aplaties par personne.\u003c/li\u003e\n\u003c/ul\u003e",
+            "ingredients": [],
+            "utensils": [
+                "57e2674fb7e8697d4b30538d"
+            ],
+            "timers": [],
+            "images": [
+                {
+                    "link": "https://d3hvwccx09j84u.cloudfront.net/0,0/6a352ebb4e4b173945bc7822/step-e0b44130.jpg",
+                    "path": "/6a352ebb4e4b173945bc7822/step-e0b44130.jpg",
+                    "caption": "Keftas en cours"
+                }
+            ],
+            "videos": []
+        },
+        {
+            "index": 5,
+            "instructions": "\nFaites chauffer un mince filet d'huile de tournesol dans une petite poêle à feu moyen-vif. Faites-y revenir les keftas 4-5 min de chaque côté, ou jusqu'à ce qu'elles soient cuites à cœur et bien colorées.\nUne fois les légumes cuits, sortez la plaque et écrasez la gousse d’ail afin d’en faire sortir la pulpe. Mélangez-la aux légumes. \n",
+            "instructionsHTML": "\u003cul\u003e\n\u003cli\u003eFaites chauffer un mince filet d\u0026#39;huile de tournesol dans une petite poêle à feu moyen-vif. Faites-y revenir les keftas 4-5 min de chaque côté, ou jusqu\u0026#39;à ce qu\u0026#39;elles soient cuites à cœur et bien colorées.\u003c/li\u003e\n\u003cli\u003e\u003cspan\u003eUne fois les légumes cuits, sortez la plaque et écrasez la \u003cstrong\u003egousse d’ail\u003c/strong\u003e afin d’en faire sortir la pulpe. \u003c/span\u003e\u003cspan\u003eMélangez-la aux légumes. \u003c/span\u003e\u003c/li\u003e\n\u003c/ul\u003e",
+            "instructionsMarkdown": "\u003cul\u003e\n\u003cli\u003eFaites chauffer un mince filet d\u0026#39;huile de tournesol dans une petite poêle à feu moyen-vif. Faites-y revenir les keftas 4-5 min de chaque côté, ou jusqu\u0026#39;à ce qu\u0026#39;elles soient cuites à cœur et bien colorées.\u003c/li\u003e\n\u003cli\u003e\u003cspan\u003eUne fois les légumes cuits, sortez la plaque et écrasez la \u003cstrong\u003egousse d’ail\u003c/strong\u003e afin d’en faire sortir la pulpe. \u003c/span\u003e\u003cspan\u003eMélangez-la aux légumes. \u003c/span\u003e\u003c/li\u003e\n\u003c/ul\u003e",
+            "ingredients": [],
+            "utensils": [
+                "57e2674fb7e8697d4b305383"
+            ],
+            "timers": [],
+            "images": [
+                {
+                    "link": "https://d3hvwccx09j84u.cloudfront.net/0,0/6a352ebb4e4b173945bc7822/step-7c3ed940.jpg",
+                    "path": "/6a352ebb4e4b173945bc7822/step-7c3ed940.jpg",
+                    "caption": "Allumer le feu"
+                }
+            ],
+            "videos": []
+        },
+        {
+            "index": 6,
+            "instructions": "\nServez dans des assiettes creuses, les légumes rôtis et les keftas de bœuf.\nAjoutez le houmous sur le côté. Saupoudrez-le d'épices du Moyen-Orient s'il vous en reste. Répartissez le reste de persil sur le plat.\n",
+            "instructionsHTML": "\u003cul\u003e\n\u003cli\u003eServez dans des assiettes creuses, les légumes rôtis et les keftas de \u003cstrong\u003ebœuf.\u003c/strong\u003e\u003c/li\u003e\n\u003cli\u003eAjoutez le \u003cstrong\u003ehoumous\u003c/strong\u003e sur le côté. Saupoudrez-le d\u0026#39;\u003cstrong\u003eépices du Moyen-Orient\u003c/strong\u003e s\u0026#39;il vous en reste. Répartissez le reste de \u003cstrong\u003epersil\u003c/strong\u003e sur le plat.\u003c/li\u003e\n\u003c/ul\u003e",
+            "instructionsMarkdown": "\u003cul\u003e\n\u003cli\u003eServez dans des assiettes creuses, les légumes rôtis et les keftas de \u003cstrong\u003ebœuf.\u003c/strong\u003e\u003c/li\u003e\n\u003cli\u003eAjoutez le \u003cstrong\u003ehoumous\u003c/strong\u003e sur le côté. Saupoudrez-le d\u0026#39;\u003cstrong\u003eépices du Moyen-Orient\u003c/strong\u003e s\u0026#39;il vous en reste. Répartissez le reste de \u003cstrong\u003epersil\u003c/strong\u003e sur le plat.\u003c/li\u003e\n\u003c/ul\u003e",
+            "ingredients": [],
+            "utensils": [],
+            "timers": [],
+            "images": [
+                {
+                    "link": "https://d3hvwccx09j84u.cloudfront.net/0,0/6a352ebb4e4b173945bc7822/step-4a5fc850.jpg",
+                    "path": "/6a352ebb4e4b173945bc7822/step-4a5fc850.jpg",
+                    "caption": "Sur la route des saveurs"
+                }
+            ],
+            "videos": []
+        }
+    ],
+    "tags": [
+        {
+            "id": "57d13370b7e8697d4b305319",
+            "type": "spicy",
+            "name": "Épicé",
+            "slug": "spicy",
+            "colorHandle": "spicy",
+            "preferences": [],
+            "displayLabel": true
+        },
+        {
+            "id": "63651421ff03d610fe0d2ae0",
+            "type": "worldwide",
+            "name": "Worldwide",
+            "slug": "worldwide",
+            "colorHandle": "text",
+            "preferences": [
+                "Végétarien",
+                "Classique",
+                "Flexitarien",
+                "Original",
+                "Rapido",
+                "Calorie Smart",
+                "Poisson \u0026 Légumes",
+                "Famille"
+            ],
+            "displayLabel": false
+        },
+        {
+            "id": "57d13370b7e8697d4b30531e",
+            "type": "healthy",
+            "name": "Healthy",
+            "slug": "healthy",
+            "colorHandle": null,
+            "preferences": [],
+            "displayLabel": false
+        },
+        {
+            "id": "57d13370b7e8697d4b305321",
+            "type": "high-protein",
+            "name": "Riche en protéines",
+            "slug": "riche-en-proteines",
+            "colorHandle": "glutenFree",
+            "preferences": [
+                "Nutri+"
+            ],
+            "displayLabel": true
+        },
+        {
+            "id": "61bcc274f0aa2a6e79272a5a",
+            "type": "extra-vegetables",
+            "name": "Le plein de légumes",
+            "slug": "le-plein-de-legumes",
+            "colorHandle": "vegan",
+            "preferences": [
+                "Nutri+"
+            ],
+            "displayLabel": true
+        },
+        {
+            "id": "57d13370b7e8697d4b30531a",
+            "type": "calorie-smart",
+            "name": "Calorie Smart",
+            "slug": "calorie-smart",
+            "colorHandle": "calorieSmart",
+            "preferences": [
+                "Nutri+"
+            ],
+            "displayLabel": true
+        },
+        {
+            "id": "5e7bd043e32d4f75fc4e1117",
+            "type": "carb-smart",
+            "name": "\u003c40 g glucides",
+            "slug": "40-g-glucides",
+            "colorHandle": "calorieSmart",
+            "preferences": [
+                "Nutri+"
+            ],
+            "displayLabel": true
+        },
+        {
+            "id": "633aebd1544a63f8e90786b6",
+            "type": "air-fryer",
+            "name": "Compatible Air Fryer",
+            "slug": "compatible-air-fryer",
+            "colorHandle": "text",
+            "preferences": [
+                "Rapido"
+            ],
+            "displayLabel": true
+        },
+        {
+            "id": "66cd26de3317fc5c1d5878c1",
+            "type": "classic-plates",
+            "name": "classic-plates",
+            "slug": "classic-plates",
+            "colorHandle": null,
+            "preferences": [],
+            "displayLabel": false
+        },
+        {
+            "id": "5f9d72db09eb0b4ae3165a56",
+            "type": "mediterranean",
+            "name": "Mediterranee",
+            "slug": "mediterranee",
+            "colorHandle": "calorieSmart",
+            "preferences": [],
+            "displayLabel": false
+        },
+        {
+            "id": "62388d0e819bac74ed306804",
+            "type": "pork-free",
+            "name": "pork-free",
+            "slug": "pork-free",
+            "colorHandle": null,
+            "preferences": [],
+            "displayLabel": false
+        },
+        {
+            "id": "69a071b243ef88e7cf82a953",
+            "type": "source-of-fibre",
+            "name": "Source de fibres",
+            "slug": "source-de-fibres",
+            "colorHandle": null,
+            "preferences": [],
+            "displayLabel": false
+        }
+    ],
+    "totalTime": "PT35M",
+    "uniqueRecipeCode": "RFR23448-17",
+    "updatedAt": "2026-09-08T06:56:38+00:00",
+    "utensils": [
+        {
+            "id": "5e3ad24dfcf61c18c30ff522",
+            "type": null,
+            "name": "Plaque de cuisson recouverte de papier sulfurisé"
+        },
+        {
+            "id": "57e2674fb7e8697d4b30538d",
+            "type": "saladbowl",
+            "name": "Saladier"
+        },
+        {
+            "id": "57e2674fb7e8697d4b305383",
+            "type": "tallsidedpan",
+            "name": "Poêle"
+        }
+    ],
+    "uuid": "2e55fa7d-37bf-49ba-ba0f-38594f4427fd",
+    "videoLink": null,
+    "websiteUrl": "https://www.hellofresh.fr/recipes/keftas-de-boeuf-houmous-and-legumes-de-saison-6a352ebb4e4b173945bc7822",
+    "yields": [
+        {
+            "yields": 1,
+            "ingredients": [
+                {
+                    "id": "6405bff8b0da194777986443",
+                    "amount": 0.5,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405bff3b9d07cd5d38d7c6b",
+                    "amount": 2,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405bf95b0da1947779862f8",
+                    "amount": 0.5,
+                    "unit": "sachet(s)"
+                },
+                {
+                    "id": "686bd9ac700c002ea1507ade",
+                    "amount": 1,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405c017b0da1947779864a9",
+                    "amount": 0.5,
+                    "unit": "sachet(s)"
+                },
+                {
+                    "id": "67644b3e9905c923d7fd39b7",
+                    "amount": 0.5,
+                    "unit": "paquet(s)"
+                },
+                {
+                    "id": "69f9baedb066be2fe1b53723",
+                    "amount": 0.5,
+                    "unit": "pot(s)"
+                },
+                {
+                    "id": "63e51218bc1d64f7b96e2702",
+                    "amount": 1,
+                    "unit": "cc"
+                },
+                {
+                    "id": "63e51222bc1d64f7b96e2706",
+                    "amount": 0.5,
+                    "unit": "cs"
+                },
+                {
+                    "id": "63e5122b81b4b295e66f025e",
+                    "amount": null,
+                    "unit": "selon le goût"
+                }
+            ]
+        },
+        {
+            "yields": 2,
+            "ingredients": [
+                {
+                    "id": "6405bff8b0da194777986443",
+                    "amount": 1,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405bff3b9d07cd5d38d7c6b",
+                    "amount": 3,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405bf95b0da1947779862f8",
+                    "amount": 1,
+                    "unit": "sachet(s)"
+                },
+                {
+                    "id": "686bd9ac700c002ea1507ade",
+                    "amount": 2,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405c017b0da1947779864a9",
+                    "amount": 1,
+                    "unit": "sachet(s)"
+                },
+                {
+                    "id": "67644b3e9905c923d7fd39b7",
+                    "amount": 1,
+                    "unit": "paquet(s)"
+                },
+                {
+                    "id": "69f9baedb066be2fe1b53723",
+                    "amount": 1,
+                    "unit": "pot(s)"
+                },
+                {
+                    "id": "63e51218bc1d64f7b96e2702",
+                    "amount": 2,
+                    "unit": "cc"
+                },
+                {
+                    "id": "63e51222bc1d64f7b96e2706",
+                    "amount": 1,
+                    "unit": "cs"
+                },
+                {
+                    "id": "63e5122b81b4b295e66f025e",
+                    "amount": null,
+                    "unit": "selon le goût"
+                }
+            ]
+        },
+        {
+            "yields": 3,
+            "ingredients": [
+                {
+                    "id": "6405bff8b0da194777986443",
+                    "amount": 1.5,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405bff3b9d07cd5d38d7c6b",
+                    "amount": 4,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405bf95b0da1947779862f8",
+                    "amount": 0.75,
+                    "unit": "sachet(s)"
+                },
+                {
+                    "id": "686bd9ac700c002ea1507ade",
+                    "amount": 2,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405c017b0da1947779864a9",
+                    "amount": 1.5,
+                    "unit": "sachet(s)"
+                },
+                {
+                    "id": "67644b3e9905c923d7fd39b7",
+                    "amount": 1,
+                    "unit": "paquet(s)"
+                },
+                {
+                    "id": "69f9baedb066be2fe1b53723",
+                    "amount": 1,
+                    "unit": "pot(s)"
+                },
+                {
+                    "id": "63e51218bc1d64f7b96e2702",
+                    "amount": 3,
+                    "unit": "cc"
+                },
+                {
+                    "id": "63e51222bc1d64f7b96e2706",
+                    "amount": 1.5,
+                    "unit": "cs"
+                },
+                {
+                    "id": "63e5122b81b4b295e66f025e",
+                    "amount": null,
+                    "unit": "selon le goût"
+                }
+            ]
+        },
+        {
+            "yields": 4,
+            "ingredients": [
+                {
+                    "id": "6405bff8b0da194777986443",
+                    "amount": 2,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405bff3b9d07cd5d38d7c6b",
+                    "amount": 5,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405bf95b0da1947779862f8",
+                    "amount": 1,
+                    "unit": "sachet(s)"
+                },
+                {
+                    "id": "686bd9ac700c002ea1507ade",
+                    "amount": 4,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405c017b0da1947779864a9",
+                    "amount": 2,
+                    "unit": "sachet(s)"
+                },
+                {
+                    "id": "67644b3e9905c923d7fd39b7",
+                    "amount": 1,
+                    "unit": "paquet(s)"
+                },
+                {
+                    "id": "69f9baedb066be2fe1b53723",
+                    "amount": 2,
+                    "unit": "pot(s)"
+                },
+                {
+                    "id": "63e51218bc1d64f7b96e2702",
+                    "amount": 4,
+                    "unit": "cc"
+                },
+                {
+                    "id": "63e51222bc1d64f7b96e2706",
+                    "amount": 2,
+                    "unit": "cs"
+                },
+                {
+                    "id": "63e5122b81b4b295e66f025e",
+                    "amount": null,
+                    "unit": "selon le goût"
+                }
+            ]
+        },
+        {
+            "yields": 5,
+            "ingredients": [
+                {
+                    "id": "6405bff8b0da194777986443",
+                    "amount": 2.5,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405bff3b9d07cd5d38d7c6b",
+                    "amount": 7,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405bf95b0da1947779862f8",
+                    "amount": 1.75,
+                    "unit": "sachet(s)"
+                },
+                {
+                    "id": "686bd9ac700c002ea1507ade",
+                    "amount": 4,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405c017b0da1947779864a9",
+                    "amount": 2.5,
+                    "unit": "sachet(s)"
+                },
+                {
+                    "id": "67644b3e9905c923d7fd39b7",
+                    "amount": 2,
+                    "unit": "paquet(s)"
+                },
+                {
+                    "id": "69f9baedb066be2fe1b53723",
+                    "amount": 2,
+                    "unit": "pot(s)"
+                }
+            ]
+        },
+        {
+            "yields": 6,
+            "ingredients": [
+                {
+                    "id": "6405bff8b0da194777986443",
+                    "amount": 3,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405bff3b9d07cd5d38d7c6b",
+                    "amount": 8,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405bf95b0da1947779862f8",
+                    "amount": 1.5,
+                    "unit": "sachet(s)"
+                },
+                {
+                    "id": "686bd9ac700c002ea1507ade",
+                    "amount": 4,
+                    "unit": "pièce(s)"
+                },
+                {
+                    "id": "6405c017b0da1947779864a9",
+                    "amount": 3,
+                    "unit": "sachet(s)"
+                },
+                {
+                    "id": "67644b3e9905c923d7fd39b7",
+                    "amount": 2,
+                    "unit": "paquet(s)"
+                },
+                {
+                    "id": "69f9baedb066be2fe1b53723",
+                    "amount": 2,
+                    "unit": "pot(s)"
+                }
+            ]
+        }
+    ]
+}
