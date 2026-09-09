@@ -5,8 +5,8 @@
 Scraper les recettes HelloFresh et les rendre consultables hors-ligne, dans une collection qui accepte aussi des recettes ajoutées à la main :
 
 1. **`script.js`** — Userscript (Tampermonkey/Greasemonkey) qui s'exécute sur hellofresh.fr, intercepte les IDs de recettes via les réponses fetch du site, récupère le détail de chaque recette via l'API interne HelloFresh, puis exporte un zip contenant pour chaque recette un dossier avec un `recette.md` (frontmatter YAML + instructions) et les images (image principale + une image par étape). Format décrit dans **[Format des recettes : dossier `recettes/`](#format-des-recettes--dossier-recettes)** ci-dessous.
-2. **`index.js`** *(à venir)* — Page/app pour visualiser les recettes (parcourir les dossiers, afficher le markdown et les images, filtrer par cuisine / tags / temps).
-3. **Serveur Python** *(à venir)* — Petit serveur local qui découvre et sert les dossiers de recettes, consommé par `index.js`.
+2. **Serveur Python** (`serveur/app.py`) — Petit serveur Flask local qui découvre les dossiers `recettes/`, parse le frontmatter avec `python-frontmatter` (PyYAML), normalise, et expose une API JSON + les images + le viewer. Détail dans **[Serveur (`serveur/`)](#serveur-serveur)** ci-dessous.
+3. **`index.js` / viewer** *(à venir)* — Page/app dans `viewer/` pour visualiser les recettes (grille, modale markdown + images, filtres cuisine / tags / temps, recherche). Consomme l'API du serveur, ne touche jamais aux `.md`.
 4. **Assistant vocal** *(objectif long terme)* — Raspberry Pi avec écran, enceinte et micro, faisant tourner un modèle qui lit une recette et guide l'utilisateur pas à pas à la voix (« étape suivante », « répète », « combien de sel ? », substitutions d'ingrédients). C'est la raison de garder les instructions en **Markdown lisible** plutôt qu'en structure rigide : c'est le format que le modèle consomme le mieux, et les titres d'étapes `###` servent de points d'arrêt naturels.
 
 **Principe de conception** : la collection doit accepter des recettes qui ne viennent pas de HelloFresh (saisies à la main, souvent sans images, sans `cuisine`, sans `tags`, sans `allergenes`, sans valeurs nutritionnelles). Seul `titre` est réellement obligatoire ; tout champ absent = information inconnue, la recette reste valide et affichable.
@@ -29,18 +29,51 @@ Pour autoriser une modification, dire à Claude d'**"appliquer"** ou d'**"edit"*
   - Les données HelloFresh ont leurs propres incohérences qui ressortent telles quelles : `fusion` **et** `fusion-cuisine` coexistent, `vietnamise` (sic). À normaliser côté visualiseur si besoin, pas dans le scraper.
   - Le libellé FR localisé (« Mexicaine », « Japonaise ») n'existe que dans la réponse *menu* — non stocké dans le `.md`, mais récupérable si le visualiseur en a besoin.
 
+## Serveur (`serveur/`)
+
+Flask, un seul processus local. Sert de source de vérité : c'est lui (pas le viewer) qui lit et normalise les `.md`.
+
+- **Lancement** : `pip install -r serveur/requirements.txt` puis `python serveur/app.py` → `http://127.0.0.1:8000`. Instructions détaillées (venv, Windows/RPi, config) dans [README.md](README.md).
+- **Config** (variables d'env, optionnelles) : `RECETTES_DIR` (défaut `<racine>/recettes`), `VIEWER_DIR` (défaut `<racine>/viewer`), `HOST` (défaut `127.0.0.1`), `PORT` (défaut `8000`). `debug`/reloader actif seulement si `HOST` est local.
+- **Découverte** : re-scan complet de `recettes/*/recette.md` à chaque requête API (collection locale de quelques dizaines de recettes → quelques ms ; on ajoute/édite un `.md` et on rafraîchit). Le slug = nom du dossier.
+- **Dépendances** : `Flask`, `python-frontmatter` (tire `PyYAML`). Venv dans `.venv/` (git-ignoré).
+
+### Endpoints
+
+| Route | Réponse |
+|---|---|
+| `GET /api/recettes` | `{ recettes: [...], erreurs: [...] }` — tous les champs **sauf `corps`**. Trié par `titre`. |
+| `GET /api/recettes/<slug>` | une recette, tous les champs **+ `corps`** (markdown brut, liens images réécrits en absolu). `404` JSON si absente, `422` si `.md` illisible. |
+| `GET /recettes/<slug>/images/<fichier>` | image statique (`send_from_directory`, anti-traversal). |
+| `GET /` , `GET /<fichier>` | sert `viewer/` ; page de repli si `viewer/` vide. |
+
+### Normalisation (serveur → JSON)
+
+- `cuisine` : `"a, b"` (string du frontmatter) → `["a", "b"]` ; absent/`""` → `[]`.
+- `tags`, `ingredients` : listes d'objets ; absent → `[]` (on ne garde que les entrées qui sont des mappings).
+- `allergenes` : liste, chaque item forcé en `str` (garde-fou YAML 1.1 : `- no` non quoté serait parsé en `False` par PyYAML).
+- `titre` absent → repli sur le slug humanisé + entrée dans `erreurs[]` (la recette reste servie).
+- `source` absent → `"manuel"` ; `id` absent → slug.
+- `image_principale` → URL absolue `/recettes/<slug>/...`, ou `null` si le fichier n'existe pas sur le disque.
+- `corps` : `![x](images/step-1.jpg)` → `![x](/recettes/<slug>/images/step-1.jpg)` (sinon le navigateur résout contre l'URL de la page). Rendu markdown → **client** (`marked`).
+- nombres : PyYAML les type déjà ; `` (vide, écrit par le scraper) → `null`.
+- un `.md` au frontmatter cassé → `erreurs[]`, n'interrompt pas la liste.
+
+Le contenu de `recettes/` **n'est pas versionné** (`.gitignore` : `/recettes/*` sauf `.gitkeep`) — recettes et images restent locales.
+
+### Ouvert / à décider
+
+- `GET /api/recettes/<slug>/etapes` (corps découpé en `[{ numero, titre, image, instructions }]`) : à faire quand l'assistant vocal démarre.
+
 ## Format des recettes : dossier `recettes/`
 
-Le dossier `recettes/` contient **toutes** les recettes : celles exportées par `script.js` **et** des recettes ajoutées à la main. `index.js` et le serveur Python lisent ce format.
+Le dossier `recettes/` contient **toutes** les recettes : celles exportées par `script.js` **et** des recettes ajoutées à la main. Le serveur Python lit ce format ; le viewer ne lit que le JSON du serveur.
 
 ### Parser : une vraie lib, pas un parser maison
 
-Le frontmatter est du **YAML standard**, à lire avec une lib éprouvée :
+Le frontmatter est du **YAML standard**, lu **uniquement par le serveur Python** avec `python-frontmatter` + `PyYAML`. Le viewer ne parse rien : il consomme le JSON déjà normalisé du serveur. (Si un jour le viewer devait lire des `.md` en direct — hébergement statique sans serveur —, utiliser `gray-matter` / `js-yaml`, jamais un parser « ligne par ligne ».)
 
-- JS (`index.js`) : `gray-matter` (sépare frontmatter / corps) ou `js-yaml`.
-- Python (serveur) : `python-frontmatter` + `PyYAML`.
-
-Ne pas écrire de parser « ligne par ligne » maison. Une recette tapée à la main utilisera du YAML parfaitement valide que le scraper ne produit pas (listes inline `[a, b]`, chaînes multi-lignes, guillemets optionnels, objets sur plusieurs lignes, ordre des clés libre) ; un parser naïf casserait dessus. Avec une vraie lib, le format produit par `script.js` reste valide **et** les recettes manuelles sont tolérées.
+Pourquoi une vraie lib : une recette tapée à la main utilisera du YAML parfaitement valide que le scraper ne produit pas (listes inline `[a, b]`, chaînes multi-lignes, guillemets optionnels, objets sur plusieurs lignes, ordre des clés libre) ; un parser naïf casserait dessus. Avec `PyYAML`, le format produit par `script.js` reste valide **et** les recettes manuelles sont tolérées.
 
 ### Arborescence
 

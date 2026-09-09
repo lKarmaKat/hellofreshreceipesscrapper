@@ -1,0 +1,9 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Recettes (exportées par le scraper ou ajoutées à la main) — non versionnées.
+# Le dossier reste présent via .gitkeep pour que le serveur démarre sur un clone neuf.
+/recettes/*
+!/recettes/.gitkeep

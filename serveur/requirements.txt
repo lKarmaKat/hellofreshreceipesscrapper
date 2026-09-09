@@ -1,0 +1,5 @@
+# Serveur local de la collection de recettes.
+#   Flask               : API JSON + fichiers statiques (images, viewer)
+#   python-frontmatter  : sépare le frontmatter du corps, parse le YAML via PyYAML
+Flask>=3.0,<4
+python-frontmatter>=1.1,<2
