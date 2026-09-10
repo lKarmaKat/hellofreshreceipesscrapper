@@ -7,7 +7,7 @@ Scraper les recettes HelloFresh et les rendre consultables hors-ligne, dans une 
 1. **`script.js`** — Userscript (Tampermonkey/Greasemonkey) qui s'exécute sur hellofresh.fr, intercepte les IDs de recettes via les réponses fetch du site, récupère le détail de chaque recette via l'API interne HelloFresh, puis exporte un zip contenant pour chaque recette un dossier avec un `recette.md` (frontmatter YAML + instructions) et les images (image principale, une image par étape, une vignette détourée par ingrédient). Les vignettes d'ingrédients sont téléchargées en *best effort* : un échec réseau est loggué (`console.warn`) sans faire échouer la recette. Format décrit dans **[Format des recettes : dossier `recettes/`](#format-des-recettes--dossier-recettes)** ci-dessous.
 2. **Serveur Python** (`serveur/app.py`) — Petit serveur Flask local qui découvre les dossiers `recettes/`, parse le frontmatter avec `python-frontmatter` (PyYAML), normalise, et expose une API JSON + les images + le viewer. Détail dans **[Serveur (`serveur/`)](#serveur-serveur)** ci-dessous.
 3. **Viewer** (`viewer/` : `index.html`, `style.css`, `app.js`) — Page servie par le serveur : grille de cartes, recherche (titre / sous-titre / ingrédients / tag / cuisine), filtres tags (ET) et cuisine (OU), slider durée max, filtre **« légumes de saison »** (mois de référence + seuil % ; les recettes sans légume identifié tombent dans une section « Hors catégorie »), modale par recette (méta, ingrédients, allergènes, instructions rendues avec `marked`). Consomme uniquement l'API JSON, ne parse aucun `.md`. Vanilla JS, seule dépendance `marked` via CDN.
-4. **Assistant vocal** *(objectif long terme)* — Raspberry Pi avec écran, enceinte et micro, faisant tourner un modèle qui lit une recette et guide l'utilisateur pas à pas à la voix (« étape suivante », « répète », « combien de sel ? », substitutions d'ingrédients). C'est la raison de garder les instructions en **Markdown lisible** plutôt qu'en structure rigide : c'est le format que le modèle consomme le mieux, et les titres d'étapes `###` servent de points d'arrêt naturels.
+4. **Front Raspberry Pi** *(objectif long terme)* — Front-end **séparé** de `viewer/` (dossier `rpi/`, à créer) pour un Raspberry Pi avec écran tactile, enceinte et micro : consultation des recettes au doigt ou à la voix, puis guidage pas à pas en synthèse vocale (« étape suivante », « répète », « répète la partie sur l'oignon », « combien de carotte ? »). Pipeline **100 % local et sans LLM** (briques légères : wake word, reconnaissance vocale à vocabulaire contraint, intentions, synthèse vocale). C'est la raison de garder les instructions en **Markdown lisible** plutôt qu'en structure rigide : bon pour la synthèse vocale, et les titres d'étapes `###` servent de points d'arrêt naturels. Détail dans **[Front Raspberry Pi](#front-raspberry-pi)** ci-dessous.
 
 **Principe de conception** : la collection doit accepter des recettes qui ne viennent pas de HelloFresh (saisies à la main, souvent sans images, sans `cuisine`, sans `tags`, sans `allergenes`, sans valeurs nutritionnelles). Seul `titre` est réellement obligatoire ; tout champ absent = information inconnue, la recette reste valide et affichable.
 
@@ -79,7 +79,8 @@ Filtre « légumes de saison » du viewer. Le serveur fournit la matière, le vi
 
 ### Ouvert / à décider
 
-- `GET /api/recettes/<slug>/etapes` (corps découpé en `[{ numero, titre, image, instructions }]`) : à faire quand l'assistant vocal démarre.
+- `GET /api/recettes/<slug>/etapes` (corps découpé en `[{ numero, titre, image, instructions }]`) : à faire quand le front Raspberry Pi démarre.
+- **Mise à l'échelle des quantités** : `qte`/`unite` émis par `script.js`, parseur de repli côté serveur, exposition `qte`/`unite`/`echelonnable`. Conçu, pas commencé — voir la section dédiée.
 - `legumes.json` à relire contre une source officielle (fenêtres établies de mémoire). Points déjà identifiés comme fragiles : patate douce (souvent importée), poireau/épinards (fenêtres larges), « Salade » classée `toute-annee`, petits pois / edamame / maïs classés `ignore` (livrés surgelés/conserve → dispo toute l'année plutôt que « de saison »).
 
 ## Format des recettes : dossier `recettes/`
@@ -131,7 +132,7 @@ Seul **`titre`** est obligatoire. Tout le reste est optionnel : champ absent = i
 | `url` | — | texte | source d'origine si applicable |
 | `tags` | — | liste `{ nom, type }` | `type` = slug ; vide/absent = aucun tag |
 | `allergenes` | — | liste de slugs | ex. `gluten`, `egg`, `milk` |
-| `ingredients` | — | liste `{ nom, quantite, type?, image? }` | `quantite` = chaîne libre : « 500 g », « 1 sachet(s) », « selon le goût » ; `type` = slug anglais HelloFresh (`bell-pepper`), clé stable inter-recettes, absent si l'API ne le donne pas et sur les recettes manuelles ; `image` = chemin relatif `images/ingredient-<slug>.png`, absent si pas de visuel |
+| `ingredients` | — | liste `{ nom, quantite, type?, image?, qte?, unite? }` | `quantite` = chaîne libre : « 500 g », « 1 sachet(s) », « selon le goût » ; `qte` (nombre) + `unite` (chaîne brute de l'API) = quantité structurée optionnelle pour la mise à l'échelle, voir **[Mise à l'échelle des quantités](#mise-à-léchelle-des-quantités)** ; `type` = slug anglais HelloFresh (`bell-pepper`), clé stable inter-recettes, absent si l'API ne le donne pas et sur les recettes manuelles ; `image` = chemin relatif `images/ingredient-<slug>.png`, absent si pas de visuel |
 
 ### Mise en forme produite par `script.js` (recettes HelloFresh)
 
@@ -183,10 +184,74 @@ Suffisant pour l'affichage et pour le guidage vocal. Le reste (`cuisine`, `tags`
 - Ligne `![...]` **uniquement** si l'étape a une image associée.
 - Instructions : puces Markdown simples (`- `), une action par ligne (préférable). Une recette manuelle peut utiliser des paragraphes — le rendu et le modèle vocal s'en accommodent.
 
-### Quantités structurées (plus tard, si besoin)
+### Quantités structurées (`qte` / `unite`)
 
-Si la mise à l'échelle automatique par portions devient nécessaire, ajouter des champs numériques optionnels aux ingrédients sans casser l'existant :
-`- { nom: "Farine", quantite: "250 g", qte: 250, unite: "g" }`. Tant que ce n'est pas fait, le modèle vocal convertit lui-même à partir de `quantite` + `portions`.
+Champs numériques optionnels par ingrédient (`- { nom: "Farine", quantite: "250 g", qte: 250, unite: "g" }`), ajoutables sans casser l'existant. Conception, contrat serveur et ordre de mise en œuvre dans **[Mise à l'échelle des quantités](#mise-à-léchelle-des-quantités)**.
+
+## Mise à l'échelle des quantités
+
+Recalculer les quantités d'une recette pour un autre nombre de portions, ou pour la quantité d'un **ingrédient limitant** dont on dispose (« il me reste 180 g de poulet, adapte le reste »). **Pas encore implémenté.** Aucun LLM : c'est de l'arithmétique sur des couples `(nombre, unité)`.
+
+### La donnée structurée existe déjà à la source
+
+L'API HelloFresh (`yields[].ingredients[]` dans `receipe_response.json`) fournit `amount` (nombre) et `unit` (chaîne) **séparés**, par ingrédient et par nombre de portions. `script.js` les aplatit aujourd'hui dans la seule chaîne `quantite` (`` `${ing.amount} ${ing.unit}` ``, [script.js](script.js) `construireFrontmatter`). Il suffit de les émettre **aussi**, en clés optionnelles :
+
+`- { nom: "Blanc de poulet", quantite: "250 g", qte: 250, unite: "g", type: chicken-breast-diced, image: ... }`
+
+- `qte` : nombre, éventuellement fractionnaire — HelloFresh émet déjà `0.5 pièce(s)`.
+- `unite` : chaîne brute de l'API (`g`, `cl`, `pièce(s)`, `cc`, `cs`, `sachet(s)`…).
+- `amount: null` / `unit: "selon le goût"` → aucune des deux clés (ingrédient non échelonnable).
+- `quantite` (chaîne libre) **reste** : c'est l'affichage, et la seule source pour les recettes manuelles.
+
+### Repli serveur : parseur déterministe
+
+Quand `qte`/`unite` sont absents (stock déjà scrapé, recettes manuelles), le serveur les dérive de `quantite` à la normalisation, par un simple découpage `^\s*(\d+(?:[.,]\d+)?)\s*(.*)$` :
+
+| `quantite` | `qte` | `unite` | échelonnable |
+|---|---|---|---|
+| `"500 g"`, `"75 cl"` | 500 / 75 | `g` / `cl` | oui |
+| `"2 cs"`, `"1 cc"` | 2 / 1 | `cs` / `cc` | oui |
+| `"1 pièce(s)"`, `"0.5 sachet(s)"` | 1 / 0.5 | `pièce(s)` / `sachet(s)` | oui |
+| `"selon le goût"`, `"1 (~1 kg)"`, `""` | — | — | non (affiché brut) |
+
+Le serveur expose alors, par ingrédient : `qte` (nombre ou `null`), `unite` (str ou `null`), `echelonnable` (bool). Le viewer a toujours une donnée structurée + un drapeau, il ne re-parse jamais.
+
+### Calcul : côté viewer
+
+Comme le score de saison, ça bouge avec un contrôle UI sans re-appel serveur.
+
+- **Mode portions** : `facteur = cible / portions`, appliqué à chaque `qte` échelonnable.
+- **Mode ingrédient limitant** : l'utilisateur choisit un ingrédient *mesurable* (`g`, `ml`, `cl`, `pièce(s)`, `cc`, `cs` — pas `sachet(s)`/`paquet(s)`/`pot(s)` dont on ignore le poids) et saisit ce dont il dispose → `facteur = dispo / qte_recette`, appliqué au reste.
+- Ingrédients non échelonnables (`selon le goût`, `1 pincée`) : inchangés, annotés « à ajuster ».
+- **Arrondi** à l'affichage : masse/volume au multiple de 5 ; `cc`/`cs` au quart ; comptables en fractions lisibles (¼ ⅓ ½ ⅔ ¾).
+
+### Ordre de mise en œuvre
+
+1. `script.js` : émettre `qte`/`unite` depuis `ing.amount` / `ing.unit`.
+2. Serveur : utiliser ces champs s'ils sont là, sinon parseur regex ; exposer `qte`/`unite`/`echelonnable`.
+3. Viewer : curseur portions (immédiat), puis mode ingrédient limitant.
+
+## Front Raspberry Pi
+
+Front-end **distinct** de `viewer/` (dossier `rpi/`, à créer). Le viewer web reste pour le desktop ; le RPi a ses propres contraintes (écran tactile ~7", mains sales, commande vocale, pas de clavier, format paysage). Les deux consomment la **même API JSON** du serveur Flask — aucune logique de parsing `.md` ne redescend dans un front.
+
+**Rien n'est encore commencé.** Conception retenue :
+
+- **Pas de LLM.** Un modèle de langage local est trop lourd pour un Pi et inutile ici. On décompose en briques spécialisées, chacune légère et déjà résolue :
+
+  | Brique | Rôle | Piste |
+  |---|---|---|
+  | Wake word | « Dis Chef… » | openWakeWord ou Porcupine (mot custom entraînable en minutes) |
+  | STT | voix → texte | Vosk FR *small* + **grammaire contrainte** (commandes + noms d'ingrédients de la collection) |
+  | Intentions | texte → action | templates de phrases (Rhasspy) ou matching regex maison |
+  | TTS | texte → voix FR | Piper (voix `fr_FR-siwis-medium`) |
+  | Écran | grille + modale tactile | page web dédiée en kiosk Chromium |
+
+- **Navigation des étapes = déterministe, zéro ML.** Le corps est déjà découpé en `###`. « étape suivante / précédente / répète » = curseur sur la liste. « répète la partie sur l'oignon » = relire la puce de l'étape courante qui contient « oignon ». « combien de carotte ? » = lecture de `ingredients[].quantite`. Tout sort de l'API JSON existante + [`GET /api/recettes/<slug>/etapes`](#ouvert--à-décider) (à faire).
+- **Ce qu'on "entraîne"** : le wake word, la grammaire d'intentions, le vocabulaire STT contraint. Rien de lourd, aucun jeu de données à constituer.
+- **Substitutions / questions libres** : hors périmètre pour l'instant (ce serait le seul cas justifiant un LLM). Si besoin plus tard : déporté sur le PC via Ollama, jamais sur le Pi.
+- **Matériel visé** : Raspberry Pi 5 (8 Go), micro USB ou HAT ReSpeaker, enceinte jack/USB, écran tactile officiel.
+- **Prototype d'abord sur PC** (Piper + navigation clavier) pour valider l'ergonomie vocale avant d'acheter le matériel.
 
 ## Fichiers d'exemple (fixtures API HelloFresh)
 
