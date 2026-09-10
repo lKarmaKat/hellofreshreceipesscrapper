@@ -8,6 +8,8 @@
 let recettes = [];
 const filtresActifs = { tags: new Set(), cuisines: new Set() };
 let termeRecherche = '';
+let dureeMax = null;         // borne haute en minutes ; null = pas de filtre durée
+let dureeMaxPossible = 0;    // plafond du slider = durée la plus longue observée
 const cacheDetails = new Map();   // slug -> objet détail (avec corps)
 let slugModaleCourante = null;
 
@@ -91,6 +93,48 @@ function construireFiltres() {
   remplirGroupeFiltre('filtres-tags', 'tags', tags.map((v) => ({ valeur: v, label: v })));
   remplirGroupeFiltre('filtres-cuisines', 'cuisines',
     cuisines.map((v) => ({ valeur: v, label: humaniserCuisine(v) })));
+  configurerSliderDuree();
+}
+
+// Slider "durée max" : filtre sur `temps_total_min`. Le plafond s'aligne sur la
+// recette la plus longue (arrondi à 5 min). Curseur au maximum = pas de filtre.
+// Une recette sans `temps_total_min` (saisie manuelle) est masquée dès que le
+// filtre est actif : on ne peut pas la situer sur l'échelle.
+function configurerSliderDuree() {
+  const slider = document.getElementById('duree-slider');
+  const groupe = document.getElementById('filtres-duree');
+
+  const durees = recettes
+    .map((r) => r.temps_total_min)
+    .filter((n) => typeof n === 'number' && n > 0);
+
+  dureeMax = null;
+  if (!durees.length) {
+    groupe.hidden = true;
+    slider.disabled = true;
+    return;
+  }
+
+  dureeMaxPossible = Math.ceil(Math.max(...durees) / 5) * 5;
+  groupe.hidden = false;
+  slider.disabled = false;
+  slider.min = 0;
+  slider.max = dureeMaxPossible;
+  slider.step = 5;
+  slider.value = dureeMaxPossible;
+  majLibelleDuree();
+
+  slider.oninput = () => {
+    const v = Number(slider.value);
+    dureeMax = v >= dureeMaxPossible ? null : v;
+    majLibelleDuree();
+    appliquerFiltres();
+  };
+}
+
+function majLibelleDuree() {
+  document.getElementById('duree-valeur').textContent =
+    dureeMax === null ? '(toutes)' : `≤ ${dureeMax} min`;
 }
 
 function remplirGroupeFiltre(idConteneur, typeFiltre, options) {
@@ -127,6 +171,14 @@ function reinitialiserFiltres() {
   termeRecherche = '';
   document.getElementById('recherche').value = '';
   document.querySelectorAll('.option-filtre input').forEach((cb) => (cb.checked = false));
+
+  const slider = document.getElementById('duree-slider');
+  if (!slider.disabled) {
+    slider.value = dureeMaxPossible;
+    dureeMax = null;
+    majLibelleDuree();
+  }
+
   appliquerFiltres();
 }
 
@@ -152,7 +204,9 @@ function appliquerFiltres() {
     const okTags = tagsChoisis.every((t) => tagsRecette.includes(t));  // ET entre tags
     const okCuisine = cuisinesChoisies.size === 0
       || (r.cuisine || []).some((c) => cuisinesChoisies.has(c));       // OU entre cuisines
-    return okTags && okCuisine && correspondRecherche(r);
+    const okDuree = dureeMax === null
+      || (typeof r.temps_total_min === 'number' && r.temps_total_min <= dureeMax);
+    return okTags && okCuisine && okDuree && correspondRecherche(r);
   });
 
   renderGrille(filtrees);

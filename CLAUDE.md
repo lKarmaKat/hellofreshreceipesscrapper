@@ -78,7 +78,7 @@ Pourquoi une vraie lib : une recette tapée à la main utilisera du YAML parfait
 
 ### Arborescence
 
-Une recette = un dossier sous `recettes/`, nommé par un slug (minuscules, tirets, sans accents) :
+Une recette = un dossier sous `recettes/`, nommé par un slug (minuscules, tirets, sans accents). `script.js` préfixe ce slug par l'`id` de recette HelloFresh (`<id>-<slug>`) : plusieurs variantes d'une même recette (un ingrédient qui change selon les préférences) sont publiées sous un nom identique et produiraient sinon le même slug — donc une collision de dossier dans le zip. Une recette manuelle peut se contenter d'un slug nu.
 
 ```
 recettes/

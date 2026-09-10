@@ -86,6 +86,20 @@ header h1 { margin: 0; font-size: 1.4rem; white-space: nowrap; }
   cursor: pointer;
 }
 .option-filtre:last-child { margin-bottom: 0; }
+
+#filtres-duree h3 { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+#duree-valeur {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+  color: var(--text);
+}
+#duree-slider {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
 #reset-filtres {
   width: 100%;
   padding: 8px;

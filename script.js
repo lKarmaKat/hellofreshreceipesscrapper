@@ -16,6 +16,14 @@
 (function () {
   'use strict';
 
+  // JSZip 3.x planifie son travail asynchrone via setImmediate quand il existe.
+  // Dans le bac à sable Tampermonkey, setImmediate est présent mais ne se déclenche
+  // jamais => zip.generateAsync() ne résout jamais. On le remplace par un shim
+  // setTimeout. (Doit rester : sans ça, la génération du zip se fige.)
+  if (typeof setImmediate === 'function') {
+    setImmediate = (callback, ...args) => setTimeout(callback, 0, ...args);
+  }
+
   // ==================== CONFIG ====================
   // Colle ton token d'accès ici avant de lancer un export (valable ~30 min).
   // DevTools > Network > n'importe quelle requête vers hellofresh.fr > Headers
@@ -27,6 +35,11 @@
 
   // Pause entre deux appels réseau (recette / image), pour rester poli avec l'API
   const PAUSE_MS = 5;
+
+  // Nombre d'images téléchargées en parallèle par recette (hero + étapes + vignettes
+  // d'ingrédients confondus). C'est cette limite de concurrence qui joue le rôle de
+  // garde-fou de politesse vis-à-vis du CDN, à la place d'une pause par image.
+  const IMAGES_EN_PARALLELE = 5;
 
   // Largeur cible des images téléchargées (paramètre w_XXX du CDN media.hellofresh.com)
   const LARGEUR_IMAGE = 480;
@@ -378,41 +391,45 @@ let tailleTotale = 0; // déclarée avant la boucle sur idsAExporter
 
       try {
         const recette = await fetchDetailRecette(id);
-        const slug = slugify(recette.name);
+        // Préfixe l'id de recette au slug : HelloFresh publie plusieurs variantes
+        // d'une même recette (un ingrédient qui change selon les préférences) sous
+        // un nom identique -> même slugify() -> collision de dossier. L'id (hex de
+        // 24 car., jeu de caractères compatible slug) garantit l'unicité.
+        const slug = `${recette.id}-${slugify(recette.name)}`;
         const dossier = zip.folder(slug);
         const dossierImages = dossier.folder('images');
 
         const yieldChoisi = trouverYieldPourPortions(recette, PORTIONS_CIBLE);
         const markdown = construireFrontmatter(recette, yieldChoisi, interceptees.get(id)) + construireCorps(recette);
         dossier.file('recette.md', markdown);
-if (typeof setImmediate === 'function') {
-  setImmediate = (callback, ...args) => setTimeout(callback, 0, ...args);
-}
-        if (recette.imagePath) {
-          const urlHero = construireUrlImage('recipes', recette.imagePath);
-          const blobHero = await telechargerImage(urlHero);
-          dossierImages.file('hero.jpg', blobHero);
-          tailleTotale += blobHero.length;
+        // Toutes les images de la recette (hero + étapes + vignettes d'ingrédients)
+        // passent par un pool à concurrence limitée (IMAGES_EN_PARALLELE) au lieu
+        // d'une file strictement séquentielle. `critique: true` => un échec fait
+        // échouer la recette (hero, étapes) ; `critique: false` => best effort, on
+        // loggue et on continue (vignettes d'ingrédients).
+        const jobsImages = [];
 
-          await pause(PAUSE_MS);
+        if (recette.imagePath) {
+          jobsImages.push({
+            nomFichier: 'hero.jpg',
+            url: construireUrlImage('recipes', recette.imagePath),
+            critique: true
+          });
         }
 
         for (const step of recette.steps) {
           for (const img of step.images || []) {
             if (!img.path) continue;
-            const urlImg = construireUrlImage('hellofresh_s3', img.path);
-            const blob = await telechargerImage(urlImg);
-            dossierImages.file(`step-${step.index}.jpg`, blob);
-            tailleTotale += blob.length;
-
-            await pause(PAUSE_MS);
+            jobsImages.push({
+              nomFichier: `step-${step.index}.jpg`,
+              url: construireUrlImage('hellofresh_s3', img.path),
+              critique: true
+            });
           }
         }
 
-        // Vignettes d'ingrédients — bonus. Contrairement au hero et aux étapes,
-        // un échec ici ne fait PAS échouer la recette : on loggue et on continue.
-        // Dédup par nom de fichier : deux ingrédients distincts peuvent se
-        // réduire au même slug (le .md pointera alors vers la même vignette).
+        // Dédup par nom de fichier : deux ingrédients distincts peuvent se réduire
+        // au même slug (le .md pointera alors vers la même vignette).
         const metaIngredients = new Map(recette.ingredients.map((i) => [i.id, i]));
         const ingredientsFaits = new Set();
         for (const ing of yieldChoisi.ingredients) {
@@ -421,16 +438,26 @@ if (typeof setImmediate === 'function') {
           const nomFichier = nomFichierIngredient(meta);
           if (ingredientsFaits.has(nomFichier)) continue;
           ingredientsFaits.add(nomFichier);
-          try {
-            const urlIng = construireUrlImage('hellofresh_s3', meta.imagePath, LARGEUR_IMAGE_INGREDIENT);
-            const octets = await telechargerImage(urlIng);
-            dossierImages.file(nomFichier, octets);
-            tailleTotale += octets.length;
-            await pause(PAUSE_MS);
-          } catch (e) {
-            console.warn(`[Recettes] Vignette ingrédient ignorée (${meta.name}) : ${e.message}`);
-          }
+          jobsImages.push({
+            nomFichier,
+            url: construireUrlImage('hellofresh_s3', meta.imagePath, LARGEUR_IMAGE_INGREDIENT),
+            critique: false,
+            nomIngredient: meta.name
+          });
         }
+
+        const resultatsImages = await mapConcurrent(jobsImages, IMAGES_EN_PARALLELE, async (job) => {
+          const octets = await telechargerImage(job.url);
+          dossierImages.file(job.nomFichier, octets);
+          tailleTotale += octets.length;
+        });
+
+        resultatsImages.forEach((res, idx) => {
+          if (res.status !== 'rejected') return;
+          const job = jobsImages[idx];
+          if (job.critique) throw res.reason; // hero / étape manquante => échec recette
+          console.warn(`[Recettes] Vignette ingrédient ignorée (${job.nomIngredient}) : ${res.reason.message}`);
+        });
 
         idsReussis.push(id);
       } catch (e) {
@@ -504,6 +531,32 @@ clearInterval(heartbeat);
 
   function pause(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  // allSettled à concurrence limitée : applique `fn` à chaque item, au plus `limite`
+  // en vol simultanément. Ne rejette jamais. Renvoie un tableau aligné sur `items`,
+  // chaque entrée valant { status: 'fulfilled', value } ou { status: 'rejected', reason }.
+  async function mapConcurrent(items, limite, fn) {
+    const resultats = new Array(items.length);
+    const enCours = new Set();
+
+    for (let i = 0; i < items.length; i++) {
+      const idx = i;
+      const tache = (async () => {
+        try {
+          resultats[idx] = { status: 'fulfilled', value: await fn(items[idx], idx) };
+        } catch (reason) {
+          resultats[idx] = { status: 'rejected', reason };
+        }
+      })();
+      enCours.add(tache);
+      tache.then(() => enCours.delete(tache));
+
+      if (enCours.size >= limite) await Promise.race(enCours);
+    }
+
+    await Promise.all(enCours);
+    return resultats;
   }
 
   // ==================== INIT ====================
