@@ -227,6 +227,9 @@ async function ouvrirRecette(slug) {
 
   if (slugModaleCourante !== slug) return;  // fermée / autre recette ouverte entre-temps
   contenu.innerHTML = rendreDetail(detail);
+  contenu.querySelectorAll('img').forEach((img) => {
+    img.addEventListener('error', () => img.remove());  // vignette / photo d'étape absente
+  });
   document.getElementById('modale').scrollTop = 0;
 }
 
@@ -244,10 +247,14 @@ function rendreDetail(r) {
   if ((r.ingredients || []).length) {
     const titre = r.portions ? `Ingrédients (pour ${r.portions})` : 'Ingrédients';
     parts.push(
-      `<h2>${echapperHtml(titre)}</h2><ul>` +
-      r.ingredients.map((i) =>
-        `<li>${echapperHtml(i.nom)}${i.quantite ? ` — ${echapperHtml(i.quantite)}` : ''}</li>`
-      ).join('') +
+      `<h2>${echapperHtml(titre)}</h2><ul class="liste-ingredients">` +
+      r.ingredients.map((i) => {
+        const texte = `${echapperHtml(i.nom)}${i.quantite ? ` — ${echapperHtml(i.quantite)}` : ''}`;
+        const vignette = i.image
+          ? `<img class="ingredient-img" src="${echapperHtml(i.image)}" alt="" loading="lazy">`
+          : '';
+        return `<li${i.image ? ' class="avec-img"' : ''}>${vignette}<span>${texte}</span></li>`;
+      }).join('') +
       '</ul>'
     );
   }

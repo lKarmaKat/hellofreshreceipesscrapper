@@ -190,6 +190,22 @@ header h1 { margin: 0; font-size: 1.4rem; white-space: nowrap; }
 #modale-contenu img { max-width: 100%; border-radius: 8px; margin: 6px 0; }
 #modale-contenu ul { padding-left: 20px; }
 #modale-contenu li { margin-bottom: 4px; }
+#modale-contenu .liste-ingredients li.avec-img {
+  list-style: none;
+  margin-left: -20px;               /* compense le padding-left du <ul> */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+#modale-contenu .ingredient-img {
+  width: 40px; height: 40px; flex: none;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #fff;
+  margin: 0;
+}
 #modale-contenu .modale-lien-source { display: inline-block; margin-top: 20px; color: var(--accent); font-size: 0.85rem; }
 #modale-contenu .modale-chargement { color: var(--text-muted); }
 #modale-contenu .modale-erreur { color: var(--couleur-erreur); }

@@ -4,7 +4,7 @@
 
 Scraper les recettes HelloFresh et les rendre consultables hors-ligne, dans une collection qui accepte aussi des recettes ajoutées à la main :
 
-1. **`script.js`** — Userscript (Tampermonkey/Greasemonkey) qui s'exécute sur hellofresh.fr, intercepte les IDs de recettes via les réponses fetch du site, récupère le détail de chaque recette via l'API interne HelloFresh, puis exporte un zip contenant pour chaque recette un dossier avec un `recette.md` (frontmatter YAML + instructions) et les images (image principale + une image par étape). Format décrit dans **[Format des recettes : dossier `recettes/`](#format-des-recettes--dossier-recettes)** ci-dessous.
+1. **`script.js`** — Userscript (Tampermonkey/Greasemonkey) qui s'exécute sur hellofresh.fr, intercepte les IDs de recettes via les réponses fetch du site, récupère le détail de chaque recette via l'API interne HelloFresh, puis exporte un zip contenant pour chaque recette un dossier avec un `recette.md` (frontmatter YAML + instructions) et les images (image principale, une image par étape, une vignette détourée par ingrédient). Les vignettes d'ingrédients sont téléchargées en *best effort* : un échec réseau est loggué (`console.warn`) sans faire échouer la recette. Format décrit dans **[Format des recettes : dossier `recettes/`](#format-des-recettes--dossier-recettes)** ci-dessous.
 2. **Serveur Python** (`serveur/app.py`) — Petit serveur Flask local qui découvre les dossiers `recettes/`, parse le frontmatter avec `python-frontmatter` (PyYAML), normalise, et expose une API JSON + les images + le viewer. Détail dans **[Serveur (`serveur/`)](#serveur-serveur)** ci-dessous.
 3. **Viewer** (`viewer/` : `index.html`, `style.css`, `app.js`) — Page servie par le serveur : grille de cartes, recherche (titre / sous-titre / ingrédients / tag / cuisine), filtres tags (ET) et cuisine (OU), modale par recette (méta, ingrédients, allergènes, instructions rendues avec `marked`). Consomme uniquement l'API JSON, ne parse aucun `.md`. Vanilla JS, seule dépendance `marked` via CDN.
 4. **Assistant vocal** *(objectif long terme)* — Raspberry Pi avec écran, enceinte et micro, faisant tourner un modèle qui lit une recette et guide l'utilisateur pas à pas à la voix (« étape suivante », « répète », « combien de sel ? », substitutions d'ingrédients). C'est la raison de garder les instructions en **Markdown lisible** plutôt qu'en structure rigide : c'est le format que le modèle consomme le mieux, et les titres d'étapes `###` servent de points d'arrêt naturels.
@@ -21,7 +21,7 @@ Pour autoriser une modification, dire à Claude d'**"appliquer"** ou d'**"edit"*
 
 - `script.js` dépend de JSZip (chargé via `@require` CDN) et des API `GM_*` (Tampermonkey/Violentmonkey).
 - L'appel à l'API détail recette (`/gw/recipes/recipes/{id}`) nécessite un token Bearer valide (~30 min de durée de vie), à renseigner dans `ACCESS_TOKEN` en haut du fichier (jetable, ne pas commiter de vrai token).
-- Les images sont reconstruites via `media.hellofresh.com` (préfixe `recipes` pour l'image principale, `hellofresh_s3` pour les étapes) plutôt que via les URLs Cloudfront renvoyées par l'API, qui étaient peu fiables (502).
+- Les images sont reconstruites via `media.hellofresh.com` (préfixe `recipes` pour l'image principale, `hellofresh_s3` pour les étapes **et les vignettes d'ingrédients** — chemin `/ingredient/<id>-<hash>.png`) plutôt que via les URLs Cloudfront renvoyées par l'API, qui étaient peu fiables (502). Les vignettes d'ingrédients sont tirées en largeur 200 (`LARGEUR_IMAGE_INGREDIENT`) ; ce préfixe pour les ingrédients n'a pas été validé aussi longuement que pour hero/étapes — si l'export loggue beaucoup de `Vignette ingrédient ignorée`, c'est le premier suspect.
 - **Cuisines** : le champ `cuisine` du frontmatter contient un ou plusieurs slugs anglais séparés par `, ` (ex. `cuisine: mexican, italian`). `construireCuisines()` (dans `script.js`) fusionne deux sources et déduplique via un `Set` :
   - réponse *menu* (`recipe.cuisines[]`, capturée dans `recettesInterceptees` dès l'interception) — forme `{ name, type }`, `{ name }` ou parfois `{ name, type }` avec `type` = copie du nom anglais ;
   - réponse *détail* (`cuisines[]`) — forme `{ id, type, name, slug, iconLink }`.
@@ -51,6 +51,7 @@ Flask, un seul processus local. Sert de source de vérité : c'est lui (pas le v
 
 - `cuisine` : `"a, b"` (string du frontmatter) → `["a", "b"]` ; absent/`""` → `[]`.
 - `tags`, `ingredients` : listes d'objets ; absent → `[]` (on ne garde que les entrées qui sont des mappings).
+- `ingredients[].image` : `images/ingredient-<slug>.png` → URL absolue `/recettes/<slug>/...`, ou `null` si le fichier n'est pas sur le disque (comme `image_principale`). Clé absente si l'ingrédient n'a pas de visuel (recette manuelle, ingrédient sans `imagePath`).
 - `allergenes` : liste, chaque item forcé en `str` (garde-fou YAML 1.1 : `- no` non quoté serait parsé en `False` par PyYAML).
 - `titre` absent → repli sur le slug humanisé + entrée dans `erreurs[]` (la recette reste servie).
 - `source` absent → `"manuel"` ; `id` absent → slug.
@@ -88,6 +89,9 @@ recettes/
       step-1.jpg
       step-2.jpg
       ...
+      ingredient-oignon.png
+      ingredient-carotte.png
+      ...
 ```
 
 Le nom du dossier sert d'`id` de repli si le frontmatter n'en fournit pas.
@@ -111,7 +115,7 @@ Seul **`titre`** est obligatoire. Tout le reste est optionnel : champ absent = i
 | `url` | — | texte | source d'origine si applicable |
 | `tags` | — | liste `{ nom, type }` | `type` = slug ; vide/absent = aucun tag |
 | `allergenes` | — | liste de slugs | ex. `gluten`, `egg`, `milk` |
-| `ingredients` | — | liste `{ nom, quantite }` | `quantite` = chaîne libre : « 500 g », « 1 sachet(s) », « selon le goût » |
+| `ingredients` | — | liste `{ nom, quantite, image? }` | `quantite` = chaîne libre : « 500 g », « 1 sachet(s) », « selon le goût » ; `image` = chemin relatif `images/ingredient-<slug>.png`, absent si pas de visuel |
 
 ### Mise en forme produite par `script.js` (recettes HelloFresh)
 
@@ -119,7 +123,7 @@ Le scraper émet une sortie régulière — mais le parser **ne doit pas en dép
 
 - textes libres entre guillemets doubles, `"` interne échappé `\"` ; nombres sans guillemets ;
 - `cuisine` : slugs anglais séparés par `, ` (jamais une liste YAML) ;
-- `tags` / `ingredients` : objets inline sur une ligne `- { nom: "…", type: … }` ;
+- `tags` / `ingredients` : objets inline sur une ligne (`- { nom: "…", type: … }` pour les tags ; `- { nom: "…", quantite: "…", image: images/ingredient-….png }` pour les ingrédients, la clé `image` étant omise sans visuel) ;
 - `allergenes` : un slug par ligne ;
 - listes vides : `script.js` écrit `tags: []` sur une seule ligne (helper `blocListe`). L'ancien sentinelle `  - []` se parsait comme « liste contenant une liste vide » avec un vrai parser YAML — ne pas le réintroduire.
 
@@ -174,4 +178,4 @@ Ces fichiers ne sont pas exécutés ; ce sont des captures servant de référenc
 
 - **`menu.json`** — Exemple de réponse interceptée par `unsafeWindow.fetch` dans `script.js` (la requête "menu" identifiée par la présence d'un champ `meals[]`). Contient `id`, `week`, et `meals[]` où chaque meal a un `recipe` avec `id`, `name`, `headline`, `image`, `websiteURL`, `tags`, `nutrition`, `cuisines`, etc. C'est cette réponse qui alimente `recettesInterceptees` (id + nom + semaine + `cuisines`) avant l'appel détail. `recipe.cuisines[]` : au plus une entrée par recette dans l'échantillon, forme `{ name: "Mexicaine", type: "mexican" }` (nom FR localisé + slug) ou parfois `{ name: "American" }` seul (nom anglais, sans `type`).
 - **`receipe_request.js`** — Exemple de requête `fetch` construite manuellement (format DevTools "Copy as fetch") vers `/gw/recipes/recipes/{id}?country=FR&locale=fr-FR`, avec les headers nécessaires (notamment `authorization: Bearer ...` et `x-requested-by: shopping-experience-web`). Sert de référence pour `fetchDetailRecette()` dans `script.js`.
-- **`receipe_response.json`** — Exemple de réponse détail recette renvoyée par l'endpoint ci-dessus. Contient la structure complète utilisée par `construireFrontmatter()` / `construireCorps()` dans `script.js` : `ingredients[]`, `yields[]` (quantités par nombre de portions), `steps[]` (instructions + `images[]` avec `path`/`caption`), `nutrition[]`, `tags[]`, `allergens[]`, `utensils[]`, `totalTime`/`prepTime` (format ISO 8601 `PTxxHxxM`), `cuisines[]` (forme `{ id, type, name, slug, iconLink }` — `slug` propre mais `name` souvent non localisé, ex. « Moroccan »), etc.
+- **`receipe_response.json`** — Exemple de réponse détail recette renvoyée par l'endpoint ci-dessus. Contient la structure complète utilisée par `construireFrontmatter()` / `construireCorps()` dans `script.js` : `ingredients[]` (chaque entrée a un `slug` propre + `imagePath` = vignette détourée `/ingredient/<id>-<hash>.png`), `yields[]` (quantités par nombre de portions), `steps[]` (instructions + `images[]` avec `path`/`caption`), `nutrition[]`, `tags[]`, `allergens[]`, `utensils[]`, `totalTime`/`prepTime` (format ISO 8601 `PTxxHxxM`), `cuisines[]` (forme `{ id, type, name, slug, iconLink }` — `slug` propre mais `name` souvent non localisé, ex. « Moroccan »), etc.

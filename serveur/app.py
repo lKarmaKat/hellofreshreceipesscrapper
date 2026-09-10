@@ -86,6 +86,20 @@ def _resoudre_image(slug: str, chemin_relatif) -> str | None:
     return f"/recettes/{slug}/{rel}"
 
 
+def _liste_ingredients(valeur, slug: str) -> list[dict]:
+    """
+    Comme _liste_objets, mais la clé `image` de chaque ingrédient (chemin relatif
+    `images/ingredient-*.png` écrit par le scraper) est résolue en URL absolue,
+    ou None si le fichier n'est pas sur le disque (download best effort côté
+    scraper). Clé laissée telle quelle si l'ingrédient n'a pas de visuel.
+    """
+    ingredients = _liste_objets(valeur)
+    for ing in ingredients:
+        if "image" in ing:
+            ing["image"] = _resoudre_image(slug, ing.get("image"))
+    return ingredients
+
+
 _RE_IMG_CORPS = re.compile(r"!\[([^\]]*)\]\(\s*(?:\./)?images/")
 
 
@@ -121,7 +135,7 @@ def normaliser(slug: str, post: "frontmatter.Post") -> tuple[dict, str | None]:
         "cuisine": _liste_cuisines(meta.get("cuisine")),
         "tags": _liste_objets(meta.get("tags")),
         "allergenes": _liste_slugs(meta.get("allergenes")),
-        "ingredients": _liste_objets(meta.get("ingredients")),
+        "ingredients": _liste_ingredients(meta.get("ingredients"), slug),
         "image_principale": _resoudre_image(slug, meta.get("image_principale")),
         "url": meta.get("url"),
     }

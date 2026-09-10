@@ -31,6 +31,9 @@
   // Largeur cible des images téléchargées (paramètre w_XXX du CDN media.hellofresh.com)
   const LARGEUR_IMAGE = 480;
 
+  // Les images d'ingrédients sont de petites vignettes détourées (200x200 natif).
+  const LARGEUR_IMAGE_INGREDIENT = 200;
+
   const CLE_STOCKAGE = 'hf_recettes_exportees'; // { [id]: 'hh:mm-dd/MM/yyyy' }
 
   // ==================== INTERCEPTION DES IDS DE RECETTES ====================
@@ -177,7 +180,8 @@
   // renvoyé par l'API, plutôt que d'utiliser l'URL cloudfront directe (imageLink / link)
   // qui a renvoyé des 502 de façon répétée.
   // Le préfixe diffère selon le type d'image : "recipes" pour l'image principale
-  // de recette, "hellofresh_s3" pour les images d'étapes (et les ingrédients).
+  // de recette, "hellofresh_s3" pour les images d'étapes et les vignettes
+  // d'ingrédients (chemin `/ingredient/<id>-<hash>.png`).
   function construireUrlImage(prefixe, cheminRelatif, largeur = LARGEUR_IMAGE) {
     return `https://media.hellofresh.com/w_${largeur},q_auto,f_auto,c_limit,fl_lossy/${prefixe}${cheminRelatif}`;
   }
@@ -212,6 +216,14 @@
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
+  }
+
+  // Nom de fichier stable pour la vignette d'un ingrédient : `ingredient-<slug>.png`.
+  // On repasse le slug HelloFresh par slugify() pour garantir le jeu de caractères
+  // (le .md le référence tel quel, et le nom de dossier suit les mêmes règles).
+  function nomFichierIngredient(meta) {
+    const base = slugify(meta.slug || meta.name || meta.id || 'ingredient');
+    return `ingredient-${base || 'x'}.png`;
   }
 
   // Fusionne les cuisines de la reponse detail et de la reponse menu en une liste
@@ -264,7 +276,15 @@
         const meta = ingredientsParId.get(ing.id);
         const nom = meta?.name || ing.id;
         const quantite = `${ing.amount ?? ''} ${ing.unit || ''}`.trim();
-        return `  - { nom: "${echapperYAML(nom)}", quantite: "${echapperYAML(quantite)}" }`;
+        const champs = [
+          `nom: "${echapperYAML(nom)}"`,
+          `quantite: "${echapperYAML(quantite)}"`
+        ];
+        // `image` seulement si l'API fournit un visuel. Le fichier est téléchargé
+        // plus bas dans lancerExport() en best effort (cf. hero) : la clé reste
+        // écrite même si le download échoue, le serveur la résout alors en null.
+        if (meta?.imagePath) champs.push(`image: images/${nomFichierIngredient(meta)}`);
+        return `  - { ${champs.join(', ')} }`;
       });
 
     const lignesTags = recette.tags.map((t) => `  - { nom: "${echapperYAML(t.name)}", type: ${t.type} }`);
@@ -372,7 +392,7 @@ if (typeof setImmediate === 'function') {
           const urlHero = construireUrlImage('recipes', recette.imagePath);
           const blobHero = await telechargerImage(urlHero);
           dossierImages.file('hero.jpg', blobHero);
-          tailleTotale += blobHero.size;
+          tailleTotale += blobHero.length;
 
           await pause(PAUSE_MS);
         }
@@ -383,9 +403,32 @@ if (typeof setImmediate === 'function') {
             const urlImg = construireUrlImage('hellofresh_s3', img.path);
             const blob = await telechargerImage(urlImg);
             dossierImages.file(`step-${step.index}.jpg`, blob);
-            tailleTotale += blob.size;
+            tailleTotale += blob.length;
 
             await pause(PAUSE_MS);
+          }
+        }
+
+        // Vignettes d'ingrédients — bonus. Contrairement au hero et aux étapes,
+        // un échec ici ne fait PAS échouer la recette : on loggue et on continue.
+        // Dédup par nom de fichier : deux ingrédients distincts peuvent se
+        // réduire au même slug (le .md pointera alors vers la même vignette).
+        const metaIngredients = new Map(recette.ingredients.map((i) => [i.id, i]));
+        const ingredientsFaits = new Set();
+        for (const ing of yieldChoisi.ingredients) {
+          const meta = metaIngredients.get(ing.id);
+          if (!meta?.imagePath) continue;
+          const nomFichier = nomFichierIngredient(meta);
+          if (ingredientsFaits.has(nomFichier)) continue;
+          ingredientsFaits.add(nomFichier);
+          try {
+            const urlIng = construireUrlImage('hellofresh_s3', meta.imagePath, LARGEUR_IMAGE_INGREDIENT);
+            const octets = await telechargerImage(urlIng);
+            dossierImages.file(nomFichier, octets);
+            tailleTotale += octets.length;
+            await pause(PAUSE_MS);
+          } catch (e) {
+            console.warn(`[Recettes] Vignette ingrédient ignorée (${meta.name}) : ${e.message}`);
           }
         }
 
