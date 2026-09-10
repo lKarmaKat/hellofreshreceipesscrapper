@@ -167,7 +167,7 @@ header h1 { margin: 0; font-size: 1.4rem; white-space: nowrap; }
 #modale {
   background: var(--card-bg);
   border-radius: 14px;
-  max-width: 720px; width: 100%;
+  max-width: 760px; width: 100%;
   padding: 32px;
   position: relative;
 }
@@ -190,22 +190,37 @@ header h1 { margin: 0; font-size: 1.4rem; white-space: nowrap; }
 #modale-contenu img { max-width: 100%; border-radius: 8px; margin: 6px 0; }
 #modale-contenu ul { padding-left: 20px; }
 #modale-contenu li { margin-bottom: 4px; }
-#modale-contenu .liste-ingredients li.avec-img {
+#modale-contenu .liste-ingredients {
   list-style: none;
-  margin-left: -20px;               /* compense le padding-left du <ul> */
+  padding: 0;
+  margin: 0 0 4px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+}
+#modale-contenu .liste-ingredients li {
+  margin: 0;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 6px;
 }
 #modale-contenu .ingredient-img {
-  width: 40px; height: 40px; flex: none;
+  width: 44px; height: 44px; flex: none;
   object-fit: contain;
   border-radius: 6px;
   border: 1px solid var(--border);
   background: #fff;
   margin: 0;
 }
+#modale-contenu .ingredient-img--absente { border-color: transparent; background: none; }
+#modale-contenu .ingredient-texte {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+#modale-contenu .ingredient-nom { line-height: 1.25; }
+#modale-contenu .ingredient-qte { font-size: 0.82rem; color: var(--text-muted); }
 #modale-contenu .modale-lien-source { display: inline-block; margin-top: 20px; color: var(--accent); font-size: 0.85rem; }
 #modale-contenu .modale-chargement { color: var(--text-muted); }
 #modale-contenu .modale-erreur { color: var(--couleur-erreur); }
@@ -216,4 +231,5 @@ header h1 { margin: 0; font-size: 1.4rem; white-space: nowrap; }
   .layout { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
   .filtres { position: static; max-height: none; }
   #modale { padding: 20px; }
+  #modale-contenu .liste-ingredients { grid-template-columns: 1fr; }
 }

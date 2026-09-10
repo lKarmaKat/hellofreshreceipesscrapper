@@ -246,14 +246,20 @@ function rendreDetail(r) {
 
   if ((r.ingredients || []).length) {
     const titre = r.portions ? `Ingrédients (pour ${r.portions})` : 'Ingrédients';
+    // Espace réservé pour les ingrédients sans vignette, mais seulement si la
+    // recette en a au moins une (sinon on n'indente rien pour rien).
+    const avecImages = r.ingredients.some((i) => i.image);
     parts.push(
       `<h2>${echapperHtml(titre)}</h2><ul class="liste-ingredients">` +
       r.ingredients.map((i) => {
-        const texte = `${echapperHtml(i.nom)}${i.quantite ? ` — ${echapperHtml(i.quantite)}` : ''}`;
         const vignette = i.image
           ? `<img class="ingredient-img" src="${echapperHtml(i.image)}" alt="" loading="lazy">`
+          : (avecImages ? '<span class="ingredient-img ingredient-img--absente" aria-hidden="true"></span>' : '');
+        const qte = i.quantite
+          ? `<span class="ingredient-qte">${echapperHtml(i.quantite)}</span>`
           : '';
-        return `<li${i.image ? ' class="avec-img"' : ''}>${vignette}<span>${texte}</span></li>`;
+        return `<li>${vignette}<span class="ingredient-texte">` +
+          `<span class="ingredient-nom">${echapperHtml(i.nom)}</span>${qte}</span></li>`;
       }).join('') +
       '</ul>'
     );
