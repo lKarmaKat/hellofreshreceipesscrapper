@@ -1,3 +1,6 @@
+# Archives de recettes produites par export_recettes.py
+/dist/
+
 # Python
 .venv/
 __pycache__/
