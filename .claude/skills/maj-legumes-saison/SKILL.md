@@ -94,7 +94,8 @@ en a.
   « Poivron rouge », « Mini-poivrons » d'un coup — préférer ça à trois entrées de
   noms ou à des alias. Garder une entrée `nom` seulement pour les ingrédients
   sans `type` (recettes scrapées avant l'ajout du champ, recettes manuelles).
-- Après une ré-export complète, penser à migrer les entrées `nom` fréquentes vers
-  leur slug `type` et à retirer les alias devenus inutiles.
+- État actuel : toute la collection est ré-exportée, la table est keyée sur les
+  slugs `type` ; les entrées de noms FR ne servent plus que de repli pour de
+  futures recettes manuelles, et `alias` est vide.
 - La table est volontairement petite : n'y mettre que ce qui apparaît vraiment
   dans la collection. Pas de pré-remplissage « au cas où ».

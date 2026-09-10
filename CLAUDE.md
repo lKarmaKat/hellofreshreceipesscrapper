@@ -67,11 +67,11 @@ Le contenu de `recettes/` **n'est pas versionné** (`.gitignore` : `/recettes/*`
 
 Filtre « légumes de saison » du viewer. Le serveur fournit la matière, le viewer calcule le score (il bouge avec le curseur sans re-appel).
 
-- **`serveur/saison/legumes.json`** — table `clef d'ingrédient normalisée → valeur` :
+- **`serveur/saison/legumes.json`** — table `clef → valeur`. **Clef = slug `type` HelloFresh** de préférence (`bell-pepper` : stable, couvre toutes les variantes de nom), sinon un nom FR normalisé (repli pour les recettes **manuelles**, sans `type`). Valeur :
   - `[1..12]` : légume saisonnier, de saison ces mois-là (compte dans le score) ;
   - `"toute-annee"` : dispo/cultivé toute l'année (carotte, champignon de couche, pomme de terre…) — compte, toujours « de saison » ;
   - `"ignore"` : pas un légume porteur de saison (aromate, herbe, légumineuse sèche, fruit d'import, produit transformé) — ne compte pas.
-  - `alias` : `clef → clef cible` pour les variantes de nom (« Tomates cerises » → `tomate`).
+  - `alias` : `clef → clef cible` ; vide depuis que les slugs sont keyés directement.
   - Établie **de mémoire** (pas ADEME/Interfel), `"_a_reviser": true`. Calendrier France métropolitaine, pleine terre.
 - **`serveur/saison.py`** — `analyser(ingredients)` → `{ legumes_saisonniers, legumes_toute_annee, applicable }`. Matching sur le slug anglais `type` **en priorité** (`bell-pepper` couvre « Poivron » / « Poivron rouge » / « Mini-poivrons »), repli sur le `nom` FR normalisé (`_clef()` : minuscules, sans accents, parenthèses retirées) pour les recettes sans `type` (scrapées avant l'ajout du champ, ou manuelles). Table rechargée à chaud si le `.json` change. `python saison.py` = audit des ingrédients non couverts.
 - **Score viewer** : `num / denom` où `denom` = nb légumes identifiés (saisonniers + toute-année), `num` = ceux de saison au mois choisi (+ tous les toute-année). En dessous du seuil → recette masquée ; `applicable: false` → section « Hors catégorie ».
@@ -80,7 +80,7 @@ Filtre « légumes de saison » du viewer. Le serveur fournit la matière, le vi
 ### Ouvert / à décider
 
 - `GET /api/recettes/<slug>/etapes` (corps découpé en `[{ numero, titre, image, instructions }]`) : à faire quand l'assistant vocal démarre.
-- `legumes.json` à relire contre une source officielle (fenêtres établies de mémoire). Points déjà identifiés comme fragiles : patate douce (souvent importée), poireau/épinards (fenêtres larges), « Salade » classée `toute-annee` par défaut.
+- `legumes.json` à relire contre une source officielle (fenêtres établies de mémoire). Points déjà identifiés comme fragiles : patate douce (souvent importée), poireau/épinards (fenêtres larges), « Salade » classée `toute-annee`, petits pois / edamame / maïs classés `ignore` (livrés surgelés/conserve → dispo toute l'année plutôt que « de saison »).
 
 ## Format des recettes : dossier `recettes/`
 
