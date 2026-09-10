@@ -293,6 +293,10 @@
           `nom: "${echapperYAML(nom)}"`,
           `quantite: "${echapperYAML(quantite)}"`
         ];
+        // `type` = slug anglais HelloFresh (ex. "bell-pepper"), clé stable d'une
+        // recette à l'autre. Sert au serveur pour la saisonnalité des légumes
+        // (matching plus fiable que sur le nom FR). Absent si l'API ne le donne pas.
+        if (meta?.type) champs.push(`type: ${meta.type}`);
         // `image` seulement si l'API fournit un visuel. Le fichier est téléchargé
         // plus bas dans lancerExport() en best effort (cf. hero) : la clé reste
         // écrite même si le download échoue, le serveur la résout alors en null.

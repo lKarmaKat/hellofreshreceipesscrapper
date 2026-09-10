@@ -6,7 +6,7 @@ Scraper les recettes HelloFresh et les rendre consultables hors-ligne, dans une 
 
 1. **`script.js`** — Userscript (Tampermonkey/Greasemonkey) qui s'exécute sur hellofresh.fr, intercepte les IDs de recettes via les réponses fetch du site, récupère le détail de chaque recette via l'API interne HelloFresh, puis exporte un zip contenant pour chaque recette un dossier avec un `recette.md` (frontmatter YAML + instructions) et les images (image principale, une image par étape, une vignette détourée par ingrédient). Les vignettes d'ingrédients sont téléchargées en *best effort* : un échec réseau est loggué (`console.warn`) sans faire échouer la recette. Format décrit dans **[Format des recettes : dossier `recettes/`](#format-des-recettes--dossier-recettes)** ci-dessous.
 2. **Serveur Python** (`serveur/app.py`) — Petit serveur Flask local qui découvre les dossiers `recettes/`, parse le frontmatter avec `python-frontmatter` (PyYAML), normalise, et expose une API JSON + les images + le viewer. Détail dans **[Serveur (`serveur/`)](#serveur-serveur)** ci-dessous.
-3. **Viewer** (`viewer/` : `index.html`, `style.css`, `app.js`) — Page servie par le serveur : grille de cartes, recherche (titre / sous-titre / ingrédients / tag / cuisine), filtres tags (ET) et cuisine (OU), modale par recette (méta, ingrédients, allergènes, instructions rendues avec `marked`). Consomme uniquement l'API JSON, ne parse aucun `.md`. Vanilla JS, seule dépendance `marked` via CDN.
+3. **Viewer** (`viewer/` : `index.html`, `style.css`, `app.js`) — Page servie par le serveur : grille de cartes, recherche (titre / sous-titre / ingrédients / tag / cuisine), filtres tags (ET) et cuisine (OU), slider durée max, filtre **« légumes de saison »** (mois de référence + seuil % ; les recettes sans légume identifié tombent dans une section « Hors catégorie »), modale par recette (méta, ingrédients, allergènes, instructions rendues avec `marked`). Consomme uniquement l'API JSON, ne parse aucun `.md`. Vanilla JS, seule dépendance `marked` via CDN.
 4. **Assistant vocal** *(objectif long terme)* — Raspberry Pi avec écran, enceinte et micro, faisant tourner un modèle qui lit une recette et guide l'utilisateur pas à pas à la voix (« étape suivante », « répète », « combien de sel ? », substitutions d'ingrédients). C'est la raison de garder les instructions en **Markdown lisible** plutôt qu'en structure rigide : c'est le format que le modèle consomme le mieux, et les titres d'étapes `###` servent de points d'arrêt naturels.
 
 **Principe de conception** : la collection doit accepter des recettes qui ne viennent pas de HelloFresh (saisies à la main, souvent sans images, sans `cuisine`, sans `tags`, sans `allergenes`, sans valeurs nutritionnelles). Seul `titre` est réellement obligatoire ; tout champ absent = information inconnue, la recette reste valide et affichable.
@@ -53,6 +53,7 @@ Flask, un seul processus local. Sert de source de vérité : c'est lui (pas le v
 - `tags`, `ingredients` : listes d'objets ; absent → `[]` (on ne garde que les entrées qui sont des mappings).
 - `ingredients[].image` : `images/ingredient-<slug>.png` → URL absolue `/recettes/<slug>/...`, ou `null` si le fichier n'est pas sur le disque (comme `image_principale`). Clé absente si l'ingrédient n'a pas de visuel (recette manuelle, ingrédient sans `imagePath`).
 - `allergenes` : liste, chaque item forcé en `str` (garde-fou YAML 1.1 : `- no` non quoté serait parsé en `False` par PyYAML).
+- `saison` : calculé (pas dans le frontmatter) par `saison.py` à partir des `ingredients` → `{ legumes_saisonniers: [{ nom, mois: [1..12] }], legumes_toute_annee: [nom], applicable: bool }`. Voir **[Saisonnalité](#saisonnalité-serveursaison)**.
 - `titre` absent → repli sur le slug humanisé + entrée dans `erreurs[]` (la recette reste servie).
 - `source` absent → `"manuel"` ; `id` absent → slug.
 - `image_principale` → URL absolue `/recettes/<slug>/...`, ou `null` si le fichier n'existe pas sur le disque.
@@ -62,9 +63,24 @@ Flask, un seul processus local. Sert de source de vérité : c'est lui (pas le v
 
 Le contenu de `recettes/` **n'est pas versionné** (`.gitignore` : `/recettes/*` sauf `.gitkeep`) — recettes et images restent locales.
 
+### Saisonnalité (`serveur/saison/`)
+
+Filtre « légumes de saison » du viewer. Le serveur fournit la matière, le viewer calcule le score (il bouge avec le curseur sans re-appel).
+
+- **`serveur/saison/legumes.json`** — table `clef d'ingrédient normalisée → valeur` :
+  - `[1..12]` : légume saisonnier, de saison ces mois-là (compte dans le score) ;
+  - `"toute-annee"` : dispo/cultivé toute l'année (carotte, champignon de couche, pomme de terre…) — compte, toujours « de saison » ;
+  - `"ignore"` : pas un légume porteur de saison (aromate, herbe, légumineuse sèche, fruit d'import, produit transformé) — ne compte pas.
+  - `alias` : `clef → clef cible` pour les variantes de nom (« Tomates cerises » → `tomate`).
+  - Établie **de mémoire** (pas ADEME/Interfel), `"_a_reviser": true`. Calendrier France métropolitaine, pleine terre.
+- **`serveur/saison.py`** — `analyser(ingredients)` → `{ legumes_saisonniers, legumes_toute_annee, applicable }`. Matching sur le slug anglais `type` **en priorité** (`bell-pepper` couvre « Poivron » / « Poivron rouge » / « Mini-poivrons »), repli sur le `nom` FR normalisé (`_clef()` : minuscules, sans accents, parenthèses retirées) pour les recettes sans `type` (scrapées avant l'ajout du champ, ou manuelles). Table rechargée à chaud si le `.json` change. `python saison.py` = audit des ingrédients non couverts.
+- **Score viewer** : `num / denom` où `denom` = nb légumes identifiés (saisonniers + toute-année), `num` = ceux de saison au mois choisi (+ tous les toute-année). En dessous du seuil → recette masquée ; `applicable: false` → section « Hors catégorie ».
+- **Mettre à jour la table** : skill `/maj-legumes-saison` (`.claude/skills/`) — repère les ingrédients non classés dans les recettes, propose une classe, écrit après validation. N'invente jamais une saison seul.
+
 ### Ouvert / à décider
 
 - `GET /api/recettes/<slug>/etapes` (corps découpé en `[{ numero, titre, image, instructions }]`) : à faire quand l'assistant vocal démarre.
+- `legumes.json` à relire contre une source officielle (fenêtres établies de mémoire). Points déjà identifiés comme fragiles : patate douce (souvent importée), poireau/épinards (fenêtres larges), « Salade » classée `toute-annee` par défaut.
 
 ## Format des recettes : dossier `recettes/`
 
@@ -115,7 +131,7 @@ Seul **`titre`** est obligatoire. Tout le reste est optionnel : champ absent = i
 | `url` | — | texte | source d'origine si applicable |
 | `tags` | — | liste `{ nom, type }` | `type` = slug ; vide/absent = aucun tag |
 | `allergenes` | — | liste de slugs | ex. `gluten`, `egg`, `milk` |
-| `ingredients` | — | liste `{ nom, quantite, image? }` | `quantite` = chaîne libre : « 500 g », « 1 sachet(s) », « selon le goût » ; `image` = chemin relatif `images/ingredient-<slug>.png`, absent si pas de visuel |
+| `ingredients` | — | liste `{ nom, quantite, type?, image? }` | `quantite` = chaîne libre : « 500 g », « 1 sachet(s) », « selon le goût » ; `type` = slug anglais HelloFresh (`bell-pepper`), clé stable inter-recettes, absent si l'API ne le donne pas et sur les recettes manuelles ; `image` = chemin relatif `images/ingredient-<slug>.png`, absent si pas de visuel |
 
 ### Mise en forme produite par `script.js` (recettes HelloFresh)
 
@@ -123,7 +139,7 @@ Le scraper émet une sortie régulière — mais le parser **ne doit pas en dép
 
 - textes libres entre guillemets doubles, `"` interne échappé `\"` ; nombres sans guillemets ;
 - `cuisine` : slugs anglais séparés par `, ` (jamais une liste YAML) ;
-- `tags` / `ingredients` : objets inline sur une ligne (`- { nom: "…", type: … }` pour les tags ; `- { nom: "…", quantite: "…", image: images/ingredient-….png }` pour les ingrédients, la clé `image` étant omise sans visuel) ;
+- `tags` / `ingredients` : objets inline sur une ligne (`- { nom: "…", type: … }` pour les tags ; `- { nom: "…", quantite: "…", type: …, image: images/ingredient-….png }` pour les ingrédients, les clés `type` et `image` étant omises quand l'API ne fournit pas la donnée) ;
 - `allergenes` : un slug par ligne ;
 - listes vides : `script.js` écrit `tags: []` sur une seule ligne (helper `blocListe`). L'ancien sentinelle `  - []` se parsait comme « liste contenant une liste vide » avec un vrai parser YAML — ne pas le réintroduire.
 

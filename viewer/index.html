@@ -25,6 +25,29 @@
       <input type="range" id="duree-slider" min="0" max="0" step="5" value="0" disabled>
     </div>
 
+    <div id="filtres-saison" class="groupe-filtre" hidden>
+      <h3>Légumes de saison</h3>
+      <select id="saison-mois" aria-label="Mois de référence">
+        <option value="">— désactivé —</option>
+        <option value="1">Janvier</option>
+        <option value="2">Février</option>
+        <option value="3">Mars</option>
+        <option value="4">Avril</option>
+        <option value="5">Mai</option>
+        <option value="6">Juin</option>
+        <option value="7">Juillet</option>
+        <option value="8">Août</option>
+        <option value="9">Septembre</option>
+        <option value="10">Octobre</option>
+        <option value="11">Novembre</option>
+        <option value="12">Décembre</option>
+      </select>
+      <div id="saison-seuil-ligne" hidden>
+        <label for="saison-seuil">Au moins <span id="saison-seuil-valeur"></span> de saison</label>
+        <input type="range" id="saison-seuil" min="0" max="100" step="10" value="60">
+      </div>
+    </div>
+
     <div id="filtres-tags" class="groupe-filtre">
       <h3>Tags</h3>
     </div>

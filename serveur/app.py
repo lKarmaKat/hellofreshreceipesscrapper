@@ -5,6 +5,7 @@ Rôle :
   - découvre les dossiers  recettes/<slug>/recette.md
   - parse le frontmatter YAML avec python-frontmatter (PyYAML)
   - normalise (cuisine "a, b" -> ["a", "b"], champs absents -> valeurs sûres)
+  - calcule la saisonnalité des légumes (saison.py + saison/legumes.json)
   - expose une API JSON, sert les images, sert le viewer (même origine -> pas de CORS)
 
 Lancement :
@@ -27,6 +28,8 @@ from pathlib import Path
 import frontmatter
 from flask import Flask, abort, jsonify, send_from_directory
 from werkzeug.exceptions import NotFound
+
+import saison
 
 # --------------------------------------------------------------------------- #
 # Config                                                                       #
@@ -118,6 +121,8 @@ def normaliser(slug: str, post: "frontmatter.Post") -> tuple[dict, str | None]:
         titre = _humaniser_slug(slug)
         avertissement = "titre manquant dans le frontmatter"
 
+    ingredients = _liste_ingredients(meta.get("ingredients"), slug)
+
     recette = {
         "slug": slug,
         "id": meta.get("id") or slug,
@@ -135,7 +140,8 @@ def normaliser(slug: str, post: "frontmatter.Post") -> tuple[dict, str | None]:
         "cuisine": _liste_cuisines(meta.get("cuisine")),
         "tags": _liste_objets(meta.get("tags")),
         "allergenes": _liste_slugs(meta.get("allergenes")),
-        "ingredients": _liste_ingredients(meta.get("ingredients"), slug),
+        "ingredients": ingredients,
+        "saison": saison.analyser(ingredients),
         "image_principale": _resoudre_image(slug, meta.get("image_principale")),
         "url": meta.get("url"),
     }

@@ -10,6 +10,8 @@ const filtresActifs = { tags: new Set(), cuisines: new Set() };
 let termeRecherche = '';
 let dureeMax = null;         // borne haute en minutes ; null = pas de filtre durée
 let dureeMaxPossible = 0;    // plafond du slider = durée la plus longue observée
+let saisonMois = null;       // 1-12 = mois de référence du filtre saison ; null = filtre off
+let saisonSeuil = 60;        // % minimum de légumes de saison pour rester dans la grille
 const cacheDetails = new Map();   // slug -> objet détail (avec corps)
 let slugModaleCourante = null;
 
@@ -94,6 +96,61 @@ function construireFiltres() {
   remplirGroupeFiltre('filtres-cuisines', 'cuisines',
     cuisines.map((v) => ({ valeur: v, label: humaniserCuisine(v) })));
   configurerSliderDuree();
+  configurerFiltreSaison();
+}
+
+// Filtre "légumes de saison" : le serveur fournit par recette `saison`
+//   { legumes_saisonniers: [{ nom, mois: [1..12] }], legumes_toute_annee: [nom], applicable }
+// On choisit un mois de référence (défaut : mois courant) et un seuil % ; une
+// recette reste dans la grille si (part de ses légumes de saison ce mois-là) >=
+// seuil. Les recettes sans aucun légume identifié (`applicable: false`) ne sont
+// pas filtrables : renderGrille les regroupe dans une section "Hors catégorie".
+function configurerFiltreSaison() {
+  const groupe = document.getElementById('filtres-saison');
+  const select = document.getElementById('saison-mois');
+  const seuil = document.getElementById('saison-seuil');
+
+  const utilisable = recettes.some((r) => r.saison && r.saison.applicable);
+  saisonMois = null;
+  if (!utilisable) {
+    groupe.hidden = true;
+    return;
+  }
+  groupe.hidden = false;
+
+  saisonMois = new Date().getMonth() + 1;   // défaut : mois courant
+  select.value = String(saisonMois);
+  seuil.value = String(saisonSeuil);
+  majFiltreSaison();
+
+  select.onchange = () => {
+    saisonMois = select.value ? Number(select.value) : null;
+    majFiltreSaison();
+    appliquerFiltres();
+  };
+  seuil.oninput = () => {
+    saisonSeuil = Number(seuil.value);
+    majFiltreSaison();
+    appliquerFiltres();
+  };
+}
+
+function majFiltreSaison() {
+  document.getElementById('saison-seuil-ligne').hidden = saisonMois === null;
+  document.getElementById('saison-seuil-valeur').textContent = `${saisonSeuil} %`;
+}
+
+// null = pas de légume identifié (recette "hors catégorie") ;
+// sinon { num, denom, pct } pour le mois donné.
+function scoreSaison(r, mois) {
+  const s = r.saison;
+  if (!s || !s.applicable) return null;
+  const toujours = (s.legumes_toute_annee || []).length;
+  const saisonniers = s.legumes_saisonniers || [];
+  const denom = toujours + saisonniers.length;
+  if (!denom) return null;
+  const num = toujours + saisonniers.filter((l) => (l.mois || []).includes(mois)).length;
+  return { num, denom, pct: Math.round((num / denom) * 100) };
 }
 
 // Slider "durée max" : filtre sur `temps_total_min`. Le plafond s'aligne sur la
@@ -179,6 +236,15 @@ function reinitialiserFiltres() {
     majLibelleDuree();
   }
 
+  const groupeSaison = document.getElementById('filtres-saison');
+  if (!groupeSaison.hidden) {
+    saisonMois = new Date().getMonth() + 1;
+    saisonSeuil = 60;
+    document.getElementById('saison-mois').value = String(saisonMois);
+    document.getElementById('saison-seuil').value = String(saisonSeuil);
+    majFiltreSaison();
+  }
+
   appliquerFiltres();
 }
 
@@ -209,7 +275,21 @@ function appliquerFiltres() {
     return okTags && okCuisine && okDuree && correspondRecherche(r);
   });
 
-  renderGrille(filtrees);
+  if (saisonMois === null) {
+    renderGrille(filtrees, []);
+    return;
+  }
+
+  // Filtre saison actif : on scinde en "assez de saison" / "hors catégorie".
+  const principales = [];
+  const horsCategorie = [];
+  for (const r of filtrees) {
+    const sc = scoreSaison(r, saisonMois);
+    if (sc === null) horsCategorie.push(r);
+    else if (sc.pct >= saisonSeuil) principales.push(r);
+    // sinon : recette identifiée mais trop peu de saison -> masquée
+  }
+  renderGrille(principales, horsCategorie);
 }
 
 // ==================== AFFICHAGE GRILLE ====================
@@ -220,23 +300,13 @@ function afficherGrilleVide(message) {
   compteur.textContent = message;
 }
 
-function renderGrille(liste) {
-  const compteur = document.getElementById('compteur');
-  const grille = document.getElementById('grille');
-
-  if (!liste.length) {
-    afficherGrilleVide(recettes.length
-      ? 'Aucune recette ne correspond aux filtres.'
-      : 'Aucune recette. Ajoute des dossiers dans recettes/.');
-    return;
-  }
-
-  compteur.className = 'compteur';
-  compteur.textContent = `${liste.length} recette${liste.length > 1 ? 's' : ''}`;
-
-  grille.innerHTML = liste.map((r) => {
-    const meta = metaCourte(r);
-    return `
+function carteHtml(r) {
+  const meta = metaCourte(r);
+  const sc = saisonMois === null ? null : scoreSaison(r, saisonMois);
+  const badgeSaison = sc
+    ? `<span class="badge badge-saison">${sc.num}/${sc.denom} de saison</span>`
+    : '';
+  return `
       <article class="carte" data-slug="${echapperHtml(r.slug)}">
         <div class="carte-img-conteneur">
           <div class="carte-img-fallback">${echapperHtml(r.titre)}</div>
@@ -245,10 +315,34 @@ function renderGrille(liste) {
         <div class="carte-body">
           <h3>${echapperHtml(r.titre)}</h3>
           ${meta ? `<div class="carte-meta">${echapperHtml(meta)}</div>` : ''}
-          <div class="ligne-badges">${badgesHtml(r)}</div>
+          <div class="ligne-badges">${badgeSaison}${badgesHtml(r)}</div>
         </div>
       </article>`;
-  }).join('');
+}
+
+function renderGrille(liste, horsCategorie = []) {
+  const compteur = document.getElementById('compteur');
+  const grille = document.getElementById('grille');
+
+  if (!liste.length && !horsCategorie.length) {
+    afficherGrilleVide(recettes.length
+      ? 'Aucune recette ne correspond aux filtres.'
+      : 'Aucune recette. Ajoute des dossiers dans recettes/.');
+    return;
+  }
+
+  compteur.className = 'compteur';
+  const n = liste.length;
+  compteur.textContent = `${n} recette${n > 1 ? 's' : ''}`
+    + (horsCategorie.length ? ` · ${horsCategorie.length} hors catégorie` : '');
+
+  let html = liste.map(carteHtml).join('');
+  if (horsCategorie.length) {
+    html += '<h2 class="grille-section">Hors catégorie'
+      + ' <span>aucun légume identifié pour juger la saison</span></h2>'
+      + horsCategorie.map(carteHtml).join('');
+  }
+  grille.innerHTML = html;
 
   grille.querySelectorAll('img').forEach((img) => {
     img.addEventListener('error', () => img.remove());

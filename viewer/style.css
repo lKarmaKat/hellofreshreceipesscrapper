@@ -7,6 +7,7 @@
   --text-muted: #6f675c;
   --couleur-tag: #2f6f4f;      /* vert : tags */
   --couleur-cuisine: #3a5ba0;  /* bleu : cuisine */
+  --couleur-saison: #7a5c00;   /* ocre : légumes de saison */
   --couleur-erreur: #8a1c1c;
 }
 * { box-sizing: border-box; }
@@ -100,6 +101,30 @@ header h1 { margin: 0; font-size: 1.4rem; white-space: nowrap; }
   accent-color: var(--accent);
   cursor: pointer;
 }
+
+#saison-mois {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  background: var(--card-bg);
+  color: var(--text);
+}
+#saison-seuil-ligne { margin-top: 10px; }
+#saison-seuil-ligne label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+#saison-seuil-valeur { font-weight: 600; color: var(--text); }
+#saison-seuil {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
 #reset-filtres {
   width: 100%;
   padding: 8px;
@@ -159,6 +184,7 @@ header h1 { margin: 0; font-size: 1.4rem; white-space: nowrap; }
 }
 .badge-tag { background: var(--couleur-tag); }
 .badge-cuisine { background: var(--couleur-cuisine); }
+.badge-saison { background: var(--couleur-saison); }
 .badge-manuel {
   background: transparent;
   color: var(--text-muted);
@@ -167,6 +193,22 @@ header h1 { margin: 0; font-size: 1.4rem; white-space: nowrap; }
 
 .compteur { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
 .compteur.vide { padding: 24px 0; font-size: 0.95rem; }
+
+.grille-section {
+  grid-column: 1 / -1;
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.grille-section:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+.grille-section span {
+  display: block;
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
 
 #overlay {
   display: none;
