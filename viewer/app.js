@@ -440,6 +440,22 @@ function construireListeCourses(slugs) {
   return lignes;
 }
 
+// Regroupement "par recette" : pas de fusion entre recettes (le but est
+// justement de voir ce qui appartient à laquelle) — juste les ingrédients
+// bruts de chacune, dans leur ordre d'origine.
+function construireListeCoursesParRecette(slugs) {
+  const groupes = [];
+  for (const slug of slugs) {
+    const r = recettes.find((x) => x.slug === slug);
+    if (!r) continue;
+    const lignes = (r.ingredients || [])
+      .filter((i) => i.nom)
+      .map((i) => ({ nom: i.nom, montant: i.quantite || '' }));
+    groupes.push({ titre: r.titre, lignes });
+  }
+  return groupes;
+}
+
 // Une ligne par ingrédient, "Nom : quantité" — pensé pour un collage propre
 // (notes, message), pas pour reproduire la mise en page de la modale.
 function texteListeCourses(lignes) {
@@ -449,6 +465,15 @@ function texteListeCourses(lignes) {
     )).join(' + ');
     return `${l.nom} : ${montant}`;
   }).join('\n');
+}
+
+function texteListeCoursesParRecette(groupes) {
+  return groupes.map((g) => {
+    const corps = g.lignes.length
+      ? g.lignes.map((l) => `- ${l.nom}${l.montant ? ` : ${l.montant}` : ''}`).join('\n')
+      : '(aucun ingrédient)';
+    return `${g.titre}\n${corps}`;
+  }).join('\n\n');
 }
 
 // navigator.clipboard exige un contexte sécurisé ; localhost en fait partie,
@@ -475,10 +500,10 @@ function copierTexte(texte) {
   });
 }
 
-async function copierListeCourses(lignes) {
+async function copierListeCourses(texte) {
   const bouton = document.getElementById('copier-liste-courses');
   try {
-    await copierTexte(texteListeCourses(lignes));
+    await copierTexte(texte);
     if (bouton) bouton.textContent = 'Copié ✓';
   } catch (e) {
     if (bouton) bouton.textContent = 'Échec de la copie';
@@ -487,9 +512,8 @@ async function copierListeCourses(lignes) {
   if (bouton) setTimeout(() => { bouton.textContent = '📋 Copier'; }, 1500);
 }
 
-function rendreListeCourses(lignes, titres) {
-  const corps = lignes.length
-    ? '<ul class="liste-courses">' + lignes.map((l) => `
+function rendreListeCoursesParIngredient(lignes) {
+  return '<ul class="liste-courses">' + lignes.map((l) => `
         <li>
           <span class="course-nom">${echapperHtml(l.nom)}</span>
           <span class="course-montants">${l.montants.map((m) => `
@@ -497,12 +521,40 @@ function rendreListeCourses(lignes, titres) {
               l.montants.length > 1 ? ` <small>(${m.titres.map((t) => echapperHtml(t)).join(', ')})</small>` : ''
             }</span>`).join('')}
           </span>
+        </li>`).join('') + '</ul>';
+}
+
+function rendreListeCoursesParRecette(groupes) {
+  return groupes.map((g) => `<h2>${echapperHtml(g.titre)}</h2>` + (
+    g.lignes.length
+      ? '<ul class="liste-courses">' + g.lignes.map((l) => `
+        <li>
+          <span class="course-nom">${echapperHtml(l.nom)}</span>
+          <span class="course-montants">${
+            l.montant ? `<span class="course-montant">${echapperHtml(l.montant)}</span>` : ''
+          }</span>
         </li>`).join('') + '</ul>'
-    : '<p class="modale-chargement">Aucun ingrédient.</p>';
+      : '<p class="modale-chargement">Aucun ingrédient.</p>'
+  )).join('');
+}
+
+function rendreListeCourses({ lignes, groupes, titres, mode }) {
+  const vide = mode === 'recette' ? !groupes.some((g) => g.lignes.length) : !lignes.length;
+  const corps = vide
+    ? '<p class="modale-chargement">Aucun ingrédient.</p>'
+    : (mode === 'recette' ? rendreListeCoursesParRecette(groupes) : rendreListeCoursesParIngredient(lignes));
+
+  const tri = `<div class="liste-courses-tri" role="group" aria-label="Regrouper par">` +
+    `<button type="button" class="tri-btn${mode === 'ingredient' ? ' actif' : ''}" data-mode="ingredient">Par ingrédient</button>` +
+    `<button type="button" class="tri-btn${mode === 'recette' ? ' actif' : ''}" data-mode="recette">Par recette</button>` +
+    `</div>`;
 
   return `<div class="modale-entete-liste-courses">` +
     `<h1>Liste de courses</h1>` +
-    (lignes.length ? `<button type="button" id="copier-liste-courses">📋 Copier</button>` : '') +
+    `<div class="liste-courses-controles">` +
+    tri +
+    (vide ? '' : `<button type="button" id="copier-liste-courses">📋 Copier</button>`) +
+    `</div>` +
     `</div>` +
     `<p class="modale-sous-titre">${titres.map((t) => echapperHtml(t)).join(' · ')}</p>` +
     corps;
@@ -516,14 +568,32 @@ function ouvrirListeCourses() {
   overlay.classList.add('actif');
 
   const slugs = [...selection];
-  const titres = slugs.map((s) => recettes.find((r) => r.slug === s)?.titre).filter(Boolean);
+  const titres = slugs.map((s) => recettes.find((r) => r.slug === s)?.titre).filter( Boolean);
   const lignes = construireListeCourses(slugs);
+  const groupes = construireListeCoursesParRecette(slugs);
 
-  contenu.innerHTML = rendreListeCourses(lignes, titres);
-  document.getElementById('modale').scrollTop = 0;
+  let mode = 'ingredient';
 
-  const bouton = document.getElementById('copier-liste-courses');
-  if (bouton) bouton.addEventListener('click', () => copierListeCourses(lignes));
+  const rendre = () => {
+    contenu.innerHTML = rendreListeCourses({ lignes, groupes, titres, mode });
+    document.getElementById('modale').scrollTop = 0;
+
+    const bouton = document.getElementById('copier-liste-courses');
+    if (bouton) {
+      bouton.addEventListener('click', () => copierListeCourses(
+        mode === 'recette' ? texteListeCoursesParRecette(groupes) : texteListeCourses(lignes)
+      ));
+    }
+    contenu.querySelectorAll('.tri-btn').forEach((b) => {
+      b.addEventListener('click', () => {
+        if (b.dataset.mode === mode) return;
+        mode = b.dataset.mode;
+        rendre();
+      });
+    });
+  };
+
+  rendre();
 }
 
 // ==================== MODALE DÉTAIL ====================

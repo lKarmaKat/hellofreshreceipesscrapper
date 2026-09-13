@@ -266,10 +266,35 @@ header h1 { margin: 0; font-size: 1.4rem; white-space: nowrap; }
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 12px;
   padding-right: 32px;
 }
 .modale-entete-liste-courses h1 { margin: 0; padding-right: 0; }
+.liste-courses-controles {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.liste-courses-tri {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.tri-btn {
+  padding: 8px 12px;
+  border: none;
+  background: var(--bg);
+  cursor: pointer;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+.tri-btn + .tri-btn { border-left: 1px solid var(--border); }
+.tri-btn:hover { background: var(--border); }
+.tri-btn.actif { background: var(--accent); color: white; }
 #copier-liste-courses {
   flex: none;
   padding: 8px 14px;
