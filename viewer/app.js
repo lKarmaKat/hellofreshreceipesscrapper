@@ -14,6 +14,7 @@ let saisonMois = null;       // 1-12 = mois de référence du filtre saison ; nu
 let saisonSeuil = 60;        // % minimum de légumes de saison pour rester dans la grille
 const cacheDetails = new Map();   // slug -> objet détail (avec corps)
 let slugModaleCourante = null;
+const selection = new Set();      // slugs cochés pour la liste de courses
 
 // ==================== OUTILS ====================
 function echapperHtml(valeur) {
@@ -306,8 +307,12 @@ function carteHtml(r) {
   const badgeSaison = sc
     ? `<span class="badge badge-saison">${sc.num}/${sc.denom} de saison</span>`
     : '';
+  const selectionnee = selection.has(r.slug);
   return `
-      <article class="carte" data-slug="${echapperHtml(r.slug)}">
+      <article class="carte${selectionnee ? ' carte--selectionnee' : ''}" data-slug="${echapperHtml(r.slug)}">
+        <label class="carte-select" title="Sélectionner pour la liste de courses">
+          <input type="checkbox" class="carte-select-cb" ${selectionnee ? 'checked' : ''}>
+        </label>
         <div class="carte-img-conteneur">
           <div class="carte-img-fallback">${echapperHtml(r.titre)}</div>
           ${r.image_principale ? `<img src="${echapperHtml(r.image_principale)}" alt="" loading="lazy">` : ''}
@@ -347,6 +352,178 @@ function renderGrille(liste, horsCategorie = []) {
   grille.querySelectorAll('img').forEach((img) => {
     img.addEventListener('error', () => img.remove());
   });
+}
+
+// ==================== SÉLECTION / LISTE DE COURSES ====================
+function majBarreSelection() {
+  const barre = document.getElementById('barre-selection');
+  const n = selection.size;
+  barre.hidden = n === 0;
+  document.getElementById('selection-compteur').textContent =
+    `${n} recette${n > 1 ? 's' : ''} sélectionnée${n > 1 ? 's' : ''}`;
+}
+
+function viderSelection() {
+  selection.clear();
+  majBarreSelection();
+  appliquerFiltres();  // re-render la grille pour retirer coches / surlignage
+}
+
+// `quantite` est une chaîne libre ("500 g", "1 pièce(s)", "selon le goût") :
+// pas encore de qte/unite structurés côté scraper (voir CLAUDE.md, "Mise à
+// l'échelle des quantités" — pas commencé). On la reparse ici au même schéma
+// que celui prévu côté serveur, uniquement pour regrouper ce qui a la même
+// unité ; le reste est listé tel quel plutôt que d'inventer un total.
+function parserQuantite(quantite) {
+  const m = String(quantite || '').trim().match(/^(\d+(?:[.,]\d+)?)\s*(.*)$/);
+  if (!m) return null;
+  const nombre = parseFloat(m[1].replace(',', '.'));
+  if (Number.isNaN(nombre)) return null;
+  return { nombre, unite: m[2].trim() };
+}
+
+function normaliserNomIngredient(nom) {
+  return String(nom || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/\p{Diacritic}/gu, '')  // accents
+    .replace(/\s*\([^)]*\)/g, '')                     // "(rouge)" etc.
+    .trim();
+}
+
+function formaterNombre(n) {
+  return String(Math.round(n * 100) / 100).replace('.', ',');
+}
+
+// Clé de regroupement : le slug `type` (anglais, stable) si l'API l'a fourni,
+// sinon le nom normalisé. Un ingrédient avec `type` dans une recette et sans
+// dans une autre ne sera donc pas fusionné avec lui-même : on préfère louper
+// une fusion plutôt qu'en forcer une incertaine.
+function construireListeCourses(slugs) {
+  const parCle = new Map();  // clé -> { nom, contributions: [{ titre, quantite }] }
+
+  for (const slug of slugs) {
+    const r = recettes.find((x) => x.slug === slug);
+    if (!r) continue;
+    for (const ing of (r.ingredients || [])) {
+      if (!ing.nom) continue;
+      const cle = ing.type ? `type:${ing.type.toLowerCase()}` : `nom:${normaliserNomIngredient(ing.nom)}`;
+      if (!parCle.has(cle)) parCle.set(cle, { nom: ing.nom, contributions: [] });
+      parCle.get(cle).contributions.push({ titre: r.titre, quantite: ing.quantite || '' });
+    }
+  }
+
+  const lignes = [];
+  for (const { nom, contributions } of parCle.values()) {
+    // Regroupe les contributions qui partagent la même unité (sommables) ;
+    // le reste (unité différente, ou quantité non parsable) reste à part.
+    const groupes = new Map();  // unité normalisée -> { unite, total, titres }
+    const nonFusionnes = [];
+    for (const c of contributions) {
+      const parsed = parserQuantite(c.quantite);
+      if (!parsed) { nonFusionnes.push({ texte: c.quantite || '?', titres: [c.titre] }); continue; }
+      const uniteNorm = parsed.unite.toLowerCase();
+      if (!groupes.has(uniteNorm)) groupes.set(uniteNorm, { unite: parsed.unite, total: 0, titres: [] });
+      const g = groupes.get(uniteNorm);
+      g.total += parsed.nombre;
+      g.titres.push(c.titre);
+    }
+
+    const montants = [...groupes.values()].map((g) => ({
+      texte: g.unite ? `${formaterNombre(g.total)} ${g.unite}` : formaterNombre(g.total),
+      titres: [...new Set(g.titres)],
+    })).concat(nonFusionnes);
+
+    lignes.push({ nom, montants });
+  }
+
+  lignes.sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+  return lignes;
+}
+
+// Une ligne par ingrédient, "Nom : quantité" — pensé pour un collage propre
+// (notes, message), pas pour reproduire la mise en page de la modale.
+function texteListeCourses(lignes) {
+  return lignes.map((l) => {
+    const montant = l.montants.map((m) => (
+      l.montants.length > 1 ? `${m.texte} (${m.titres.join(', ')})` : m.texte
+    )).join(' + ');
+    return `${l.nom} : ${montant}`;
+  }).join('\n');
+}
+
+// navigator.clipboard exige un contexte sécurisé ; localhost en fait partie,
+// mais on garde un repli textarea + execCommand au cas où.
+function copierTexte(texte) {
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(texte);
+  }
+  return new Promise((resolve, reject) => {
+    const zone = document.createElement('textarea');
+    zone.value = texte;
+    zone.style.position = 'fixed';
+    zone.style.opacity = '0';
+    document.body.appendChild(zone);
+    zone.select();
+    try {
+      document.execCommand('copy');
+      resolve();
+    } catch (e) {
+      reject(e);
+    } finally {
+      document.body.removeChild(zone);
+    }
+  });
+}
+
+async function copierListeCourses(lignes) {
+  const bouton = document.getElementById('copier-liste-courses');
+  try {
+    await copierTexte(texteListeCourses(lignes));
+    if (bouton) bouton.textContent = 'Copié ✓';
+  } catch (e) {
+    if (bouton) bouton.textContent = 'Échec de la copie';
+    console.warn('[liste de courses] copie impossible :', e);
+  }
+  if (bouton) setTimeout(() => { bouton.textContent = '📋 Copier'; }, 1500);
+}
+
+function rendreListeCourses(lignes, titres) {
+  const corps = lignes.length
+    ? '<ul class="liste-courses">' + lignes.map((l) => `
+        <li>
+          <span class="course-nom">${echapperHtml(l.nom)}</span>
+          <span class="course-montants">${l.montants.map((m) => `
+            <span class="course-montant">${echapperHtml(m.texte)}${
+              l.montants.length > 1 ? ` <small>(${m.titres.map((t) => echapperHtml(t)).join(', ')})</small>` : ''
+            }</span>`).join('')}
+          </span>
+        </li>`).join('') + '</ul>'
+    : '<p class="modale-chargement">Aucun ingrédient.</p>';
+
+  return `<div class="modale-entete-liste-courses">` +
+    `<h1>Liste de courses</h1>` +
+    (lignes.length ? `<button type="button" id="copier-liste-courses">📋 Copier</button>` : '') +
+    `</div>` +
+    `<p class="modale-sous-titre">${titres.map((t) => echapperHtml(t)).join(' · ')}</p>` +
+    corps;
+}
+
+function ouvrirListeCourses() {
+  if (!selection.size) return;
+  const overlay = document.getElementById('overlay');
+  const contenu = document.getElementById('modale-contenu');
+  slugModaleCourante = null;  // pas une recette : évite tout conflit avec le garde-fou d'ouvrirRecette
+  overlay.classList.add('actif');
+
+  const slugs = [...selection];
+  const titres = slugs.map((s) => recettes.find((r) => r.slug === s)?.titre).filter(Boolean);
+  const lignes = construireListeCourses(slugs);
+
+  contenu.innerHTML = rendreListeCourses(lignes, titres);
+  document.getElementById('modale').scrollTop = 0;
+
+  const bouton = document.getElementById('copier-liste-courses');
+  if (bouton) bouton.addEventListener('click', () => copierListeCourses(lignes));
 }
 
 // ==================== MODALE DÉTAIL ====================
@@ -455,9 +632,21 @@ function wireEvenements() {
     if (e.key === 'Escape') fermerModale();
   });
   document.getElementById('grille').addEventListener('click', (e) => {
+    if (e.target.closest('.carte-select')) return;  // géré par l'event 'change' ci-dessous
     const carte = e.target.closest('.carte');
     if (carte) ouvrirRecette(carte.dataset.slug);
   });
+  document.getElementById('grille').addEventListener('change', (e) => {
+    const cb = e.target.closest('.carte-select-cb');
+    if (!cb) return;
+    const carte = cb.closest('.carte');
+    if (cb.checked) selection.add(carte.dataset.slug);
+    else selection.delete(carte.dataset.slug);
+    carte.classList.toggle('carte--selectionnee', cb.checked);
+    majBarreSelection();
+  });
+  document.getElementById('ouvrir-liste-courses').addEventListener('click', ouvrirListeCourses);
+  document.getElementById('vider-selection').addEventListener('click', viderSelection);
 }
 
 init();
