@@ -416,21 +416,23 @@ function construireListeCourses(slugs) {
   for (const { nom, contributions } of parCle.values()) {
     // Regroupe les contributions qui partagent la même unité (sommables) ;
     // le reste (unité différente, ou quantité non parsable) reste à part.
-    const groupes = new Map();  // unité normalisée -> { unite, total, titres }
+    // Chaque groupe garde aussi la part de chaque recette (`parts`), pour
+    // afficher par exemple "3 pièce(s)" avec le détail "2 Recette X, 1 Recette Y".
+    const groupes = new Map();  // unité normalisée -> { unite, total, parts: Map<titre, nombre> }
     const nonFusionnes = [];
     for (const c of contributions) {
       const parsed = parserQuantite(c.quantite);
-      if (!parsed) { nonFusionnes.push({ texte: c.quantite || '?', titres: [c.titre] }); continue; }
+      if (!parsed) { nonFusionnes.push({ texte: c.quantite || '?', parts: [{ titre: c.titre, nombre: null }] }); continue; }
       const uniteNorm = parsed.unite.toLowerCase();
-      if (!groupes.has(uniteNorm)) groupes.set(uniteNorm, { unite: parsed.unite, total: 0, titres: [] });
+      if (!groupes.has(uniteNorm)) groupes.set(uniteNorm, { unite: parsed.unite, total: 0, parts: new Map() });
       const g = groupes.get(uniteNorm);
       g.total += parsed.nombre;
-      g.titres.push(c.titre);
+      g.parts.set(c.titre, (g.parts.get(c.titre) || 0) + parsed.nombre);
     }
 
     const montants = [...groupes.values()].map((g) => ({
       texte: g.unite ? `${formaterNombre(g.total)} ${g.unite}` : formaterNombre(g.total),
-      titres: [...new Set(g.titres)],
+      parts: [...g.parts.entries()].map(([titre, nombre]) => ({ titre, nombre })),
     })).concat(nonFusionnes);
 
     lignes.push({ nom, montants });
@@ -461,7 +463,9 @@ function construireListeCoursesParRecette(slugs) {
 function texteListeCourses(lignes) {
   return lignes.map((l) => {
     const montant = l.montants.map((m) => (
-      l.montants.length > 1 ? `${m.texte} (${m.titres.join(', ')})` : m.texte
+      m.parts.length > 1
+        ? `${m.texte} (${m.parts.map((p) => `${formaterNombre(p.nombre)} ${p.titre}`).join(', ')})`
+        : m.texte
     )).join(' + ');
     return `${l.nom} : ${montant}`;
   }).join('\n');
@@ -518,7 +522,9 @@ function rendreListeCoursesParIngredient(lignes) {
           <span class="course-nom">${echapperHtml(l.nom)}</span>
           <span class="course-montants">${l.montants.map((m) => `
             <span class="course-montant">${echapperHtml(m.texte)}${
-              l.montants.length > 1 ? ` <small>(${m.titres.map((t) => echapperHtml(t)).join(', ')})</small>` : ''
+              m.parts.length > 1
+                ? ` <small>(${m.parts.map((p) => `${echapperHtml(formaterNombre(p.nombre))} ${echapperHtml(p.titre)}`).join(', ')})</small>`
+                : ''
             }</span>`).join('')}
           </span>
         </li>`).join('') + '</ul>';
