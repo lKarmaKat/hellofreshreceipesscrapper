@@ -252,14 +252,16 @@ function reinitialiserFiltres() {
 // ==================== RECHERCHE / FILTRAGE ====================
 function correspondRecherche(r) {
   if (!termeRecherche) return true;
+  const termes = termeRecherche.split(',').map((t) => t.trim()).filter(Boolean);
+  if (!termes.length) return true;
   const champs = [
     r.titre,
     r.sous_titre,
     ...(r.ingredients || []).map((i) => i.nom),
     ...(r.tags || []).map((t) => t.nom),
     ...(r.cuisine || []).map(humaniserCuisine),
-  ];
-  return champs.some((c) => c && c.toLowerCase().includes(termeRecherche));
+  ].filter(Boolean).map((c) => c.toLowerCase());
+  return termes.every((terme) => champs.some((c) => c.includes(terme)));
 }
 
 function appliquerFiltres() {
