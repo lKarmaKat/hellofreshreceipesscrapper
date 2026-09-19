@@ -50,9 +50,25 @@
   const CLE_STOCKAGE = 'hf_recettes_exportees'; // { [id]: 'hh:mm-dd/MM/yyyy' }
 
   // ==================== INTERCEPTION DES IDS DE RECETTES ====================
-  // On détecte la réponse "menu" par sa forme (présence d'un champ meals[]),
-  // peu importe l'URL exacte qui l'a renvoyée.
+  // On détecte deux formes de réponse par leur forme, peu importe l'URL exacte
+  // qui les a renvoyées :
+  // - "menu" : { week, meals: [ { recipe: { id, name, cuisines, ... } } ] }
+  // - "past-deliveries" : { weeks: [ { week, meals: [ { id, name, cuisines, ... } ] } ] }
+  //   (ici chaque entrée de meals[] EST directement la recette, pas de wrapper `.recipe`)
   unsafeWindow.recettesInterceptees = unsafeWindow.recettesInterceptees || new Map();
+
+  function enregistrerRecetteInterceptee(r, week) {
+    if (!r?.id) return;
+    // On capture `cuisines` dès l'interception : la réponse détail donne un `slug`
+    // propre mais un `name` non localisé, le menu/past-deliveries donnent le libellé FR
+    // + souvent le slug (`type`). construireCuisines() fusionne les deux.
+    unsafeWindow.recettesInterceptees.set(r.id, {
+      id: r.id,
+      nom: r.name,
+      week,
+      cuisines: Array.isArray(r.cuisines) ? r.cuisines : []
+    });
+  }
 
   const pageFetch = unsafeWindow.fetch.bind(unsafeWindow);
 
@@ -60,25 +76,12 @@
     const response = await pageFetch(...args);
 
     response.clone().json().then((data) => {
-                let i = 0;
-
       if (data && Array.isArray(data.meals)) {
-        console.log("data.meals existent");
-        for (const meal of data.meals) {
-            //if (i > 3) break;
-            i++;
-          const r = meal.recipe;
-          if (r?.id) {
-            // On capture `cuisines` dès le menu : la réponse détail donne un `slug`
-            // propre mais un `name` non localisé, le menu donne le libellé FR + souvent
-            // le slug (`type`). construireCuisines() fusionne les deux.
-            unsafeWindow.recettesInterceptees.set(r.id, {
-              id: r.id,
-              nom: r.name,
-              week: data.week,
-              cuisines: Array.isArray(r.cuisines) ? r.cuisines : []
-            });
-          }
+        for (const meal of data.meals) enregistrerRecetteInterceptee(meal.recipe, data.week);
+        majBoutonExport();
+      } else if (data && Array.isArray(data.weeks)) {
+        for (const semaine of data.weeks) {
+          for (const meal of semaine.meals || []) enregistrerRecetteInterceptee(meal, semaine.week);
         }
         majBoutonExport();
       }

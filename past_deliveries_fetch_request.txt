@@ -1,0 +1,29 @@
+fetch("https://www.hellofresh.fr/gw/my-deliveries/past-deliveries?country=FR&from=2026-W38&locale=fr-FR&rating-scale=5&subscription=3354258", {
+  "headers": {
+    "accept": "*/*",
+    "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+    "authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Im0zTXVfbkJVMmFDaW9ZNTV4aDRkTiJ9.eyJodHRwczovL2hlbGxvZnJlc2guY29tL2N1c3RvbWVyX3V1aWQiOiIwYjA2OTUwMC0xYjYwLTQwMTQtOTkwNC04MDg3ODEwNjg3MGUiLCJodHRwczovL2hlbGxvZnJlc2guY29tL2NvdW50cnkiOiJmciIsImh0dHBzOi8vaGVsbG9mcmVzaC5jb20vZW1haWwiOiJsbG95ZHdlc3RidXJ5QGdtYWlsLmNvbSIsImh0dHBzOi8vaGVsbG9mcmVzaC5jb20vdXNlcm5hbWUiOiJsbG95ZHdlc3RidXJ5QGdtYWlsLmNvbSIsImlzcyI6Imh0dHBzOi8vaGVsbG9mcmVzaC1saXZlLmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHxmcnNvY2lhbHw2NjNmODcwMzFhYjgzNzQwNGU4M2MyMDciLCJhdWQiOiJodHRwczovL2hlbGxvZnJlc2guY29tIiwiaWF0IjoxNzg5NDkzODQ0LCJleHAiOjE3ODk0OTU2NDQsInNjb3BlIjoib2ZmbGluZV9hY2Nlc3MiLCJndHkiOlsicmVmcmVzaF90b2tlbiIsInBhc3N3b3JkIl0sImF6cCI6IkIxbjBRMjRodjdlNEFIYzd5RzFXd1F5dU12cENBSXlhIn0.P654NQF-Kp9HCrphPQhZlEy6B9ecACQfPd1qwfep334MFX8bq6n30JIre0JzyB8K5_39agye49cj3amIVUsM3i5iIp5NVRLH6wNpCRBLHEwrbLz5jCkDYcNPbN0QdV2GnPEufpShqZtM-4WyhC4Bw-eHeUogl6henNS4utyImMkbu6aPleD0wNOPCL6CK3KoGZKSONnC2AmuH8UuZYeZQulAXczFl42QXAhH34Ss5DUUj1yAcVQTfeZqLL1hFnGDBjxim_5vq4SYvrz6bctGdPuInwoiIZhmrz0b1jJ797CqCiyTGw3H17d4A5WQFxmDK-1nV7aEWYQSkZCCsJxLJQ",
+    "cache-control": "no-cache",
+    "dpr": "1.25",
+    "pragma": "no-cache",
+    "priority": "u=1, i",
+    "sec-ch-ua": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "traceparent": "00-5b5c221ba3b3f5a771a337aad3c2fd9c-75c92aa6bb29d5c7-01",
+    "viewport-width": "2048",
+    "x-b3-sampled": "1",
+    "x-b3-spanid": "75c92aa6bb29d5c7",
+    "x-b3-traceid": "5b5c221ba3b3f5a771a337aad3c2fd9c",
+    "x-request-id": "9d3c8b95-6046-4ee7-a0cc-792b3ed9ef00",
+    "x-requested-by": "upselling"
+  },
+  "referrer": "https://www.hellofresh.fr/my-account/deliveries/menu?dis_channel=seabrand&discount_comm_id=b9cc8661-00c6-4116-86f8-6d55fefd49dd&locale=fr-FR&subscriptionId=3354258&week=2026-W39",
+  "body": null,
+  "method": "GET",
+  "mode": "cors",
+  "credentials": "include"
+});

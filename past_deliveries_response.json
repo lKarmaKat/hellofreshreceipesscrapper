@@ -1,0 +1,1317 @@
+{
+    "weeks": [
+        {
+            "week": "2026-W38",
+            "menuId": "6a7b1faa388eee5aef2eae18",
+            "meals": [
+                {
+                    "id": "6a352ea34e4b173945bc77b5",
+                    "shoppableProductId": "eb58155e-df27-5829-bd8f-2fa4ccaf112d",
+                    "name": "Huevos rancheros à la mexicaine \u0026 porc haché",
+                    "headline": "garnis de cheddar \u0026 tortillas",
+                    "prepTime": "PT35M",
+                    "totalTime": "PT25M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y25_R230_W03_FR_QFR19029-1_Main_high-0e948655.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/huevos-rancheros-a-la-mexicaine-and-porc-hache-6a352ea34e4b173945bc77b5",
+                    "tags": [
+                        {
+                            "name": "Famille",
+                            "type": "family-friendly",
+                            "colorHandle": "familyFriendly",
+                            "preferences": [
+                                "Famille"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "One Pot",
+                            "type": "one-pot",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Œufs non inclus",
+                            "type": "egg-free",
+                            "colorHandle": "regular",
+                            "preferences": [
+                                "Classique"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Épicé",
+                            "type": "spicy",
+                            "colorHandle": "spicy",
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "latin-american-faves",
+                            "type": "latin-american-faves",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Curries",
+                            "type": "curries",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Source de fibres",
+                            "type": "source-of-fibre",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 4305,
+                        "calories": 1029,
+                        "carbohydrate": 72.5,
+                        "protein": 48.6,
+                        "fat": 57.1
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Mexicaine",
+                            "type": "mexican"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a352ebb4e4b173945bc7822",
+                    "shoppableProductId": "bb38b2f1-1b61-5a99-90e1-664c317189e9",
+                    "name": "Keftas de bœuf, houmous \u0026 légumes de saison",
+                    "headline": "avec du persil \u0026 des épices du Moyen-Orient",
+                    "prepTime": "PT45M",
+                    "totalTime": "PT35M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y25_R220_W38_FR_RFR23448-8_Main_remove_courgette_edit_high-fe148e87.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/keftas-de-boeuf-houmous-and-legumes-de-saison-6a352ebb4e4b173945bc7822",
+                    "tags": [
+                        {
+                            "name": "Épicé",
+                            "type": "spicy",
+                            "colorHandle": "spicy",
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Worldwide",
+                            "type": "worldwide",
+                            "colorHandle": "text",
+                            "preferences": [
+                                "Végétarien",
+                                "Classique",
+                                "Flexitarien",
+                                "Original",
+                                "Rapido",
+                                "Calorie Smart",
+                                "Poisson \u0026 Légumes",
+                                "Famille"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Healthy",
+                            "type": "healthy",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Riche en protéines",
+                            "type": "high-protein",
+                            "colorHandle": "glutenFree",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Le plein de légumes",
+                            "type": "extra-vegetables",
+                            "colorHandle": "vegan",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Calorie Smart",
+                            "type": "calorie-smart",
+                            "colorHandle": "calorieSmart",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "\u003c40 g glucides",
+                            "type": "carb-smart",
+                            "colorHandle": "calorieSmart",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Compatible Air Fryer",
+                            "type": "air-fryer",
+                            "colorHandle": "text",
+                            "preferences": [
+                                "Rapido"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "classic-plates",
+                            "type": "classic-plates",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Mediterranee",
+                            "type": "mediterranean",
+                            "colorHandle": "calorieSmart",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pork-free",
+                            "type": "pork-free",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Source de fibres",
+                            "type": "source-of-fibre",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 1886,
+                        "calories": 451,
+                        "carbohydrate": 22.3,
+                        "protein": 26.2,
+                        "fat": 27.8
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Moroccan",
+                            "type": "Moroccan"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a352eda4e4b173945bc7889",
+                    "shoppableProductId": "c6c6796a-cfa8-5853-83dd-342c5fd53f0b",
+                    "name": "Pavé de bœuf sauce Bercy \u0026 linguine",
+                    "headline": "avec du persil \u0026 du fromage râpé",
+                    "prepTime": "PT35M",
+                    "totalTime": "PT35M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y25_R233_W39_FR_RFR20161868-49_-33_Main__2high-eee16ffb.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/pave-de-boeuf-sauce-bercy-and-linguine-6a352eda4e4b173945bc7889",
+                    "tags": [
+                        {
+                            "name": "Famille",
+                            "type": "family-friendly",
+                            "colorHandle": "familyFriendly",
+                            "preferences": [
+                                "Famille"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "ineligible-reco",
+                            "type": "ineligible-for-recommendation",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pasta-noodles",
+                            "type": "pasta-noodles",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "regional-specialty",
+                            "type": "regional-specialty",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pork-free",
+                            "type": "pork-free",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 3350,
+                        "calories": 801,
+                        "carbohydrate": 82.6,
+                        "protein": 44.3,
+                        "fat": 30.6
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Française",
+                            "type": "french"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a352e9627757fc0a2600755",
+                    "shoppableProductId": "d842935b-8014-5804-a51f-1b7b59d9a5b7",
+                    "name": "Porc au caramel vietnamien",
+                    "headline": "avec du riz, du gomasio \u0026 de la coriandre",
+                    "prepTime": "PT45M",
+                    "totalTime": "PT30M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y24_R204_W49_FR_RFR16631737-13_MAIN_high-dc9e0ca2.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/porc-au-caramel-vietnamien-6a352e9627757fc0a2600755",
+                    "tags": [
+                        {
+                            "name": "Worldwide",
+                            "type": "worldwide",
+                            "colorHandle": "text",
+                            "preferences": [
+                                "Végétarien",
+                                "Classique",
+                                "Flexitarien",
+                                "Original",
+                                "Rapido",
+                                "Calorie Smart",
+                                "Poisson \u0026 Légumes",
+                                "Famille"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Épicé",
+                            "type": "spicy",
+                            "colorHandle": "spicy",
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "classic-plates",
+                            "type": "classic-plates",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pan-asian-plates",
+                            "type": "pan-asian-plates",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 3055,
+                        "calories": 730,
+                        "carbohydrate": 92.4,
+                        "protein": 40.2,
+                        "fat": 23.6
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Vietnamese",
+                            "type": "vietnamise"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a352e9c4e4b173945bc779f",
+                    "shoppableProductId": "952d0b6c-ef0a-598b-85f7-6ae89db851c4",
+                    "name": "Saucisse de Toulouse sauce au thym \u0026 oignon",
+                    "headline": "avec des légumes rôtis \u0026 une salade",
+                    "prepTime": "PT40M",
+                    "totalTime": "PT25M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y26_R205_W38_FR_RFR29804205-10main_swap_red_bell_pepper_strips_mesclun_edit_high-374cd8c1.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/saucisse-de-toulouse-sauce-au-thym-and-oignon-6a352e9c4e4b173945bc779f",
+                    "tags": [
+                        {
+                            "name": "Famille",
+                            "type": "family-friendly",
+                            "colorHandle": "familyFriendly",
+                            "preferences": [
+                                "Famille"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "classic-plates",
+                            "type": "classic-plates",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "regional-specialty",
+                            "type": "regional-specialty",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 3797,
+                        "calories": 908,
+                        "carbohydrate": 62,
+                        "protein": 24.9,
+                        "fat": 63
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Française",
+                            "type": "french"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a352ec827757fc0a2600819",
+                    "shoppableProductId": "22866375-0819-5851-82ee-42d6b2707455",
+                    "name": "La Layali : dinde panée au zaatar \u0026 pois chiches",
+                    "headline": "avec une sauce menthe-yaourt \u0026 de la salade",
+                    "prepTime": "PT25M",
+                    "totalTime": "PT25M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y26_R224_W38_FR_RFR58489-5main_swap_mesclun_edit_high-119fd559.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/la-layali-dinde-panee-au-zaatar-and-pois-chiches-6a352ec827757fc0a2600819",
+                    "label": {
+                        "text": "NOUVEAU",
+                        "handle": "nieuw",
+                        "foregroundColor": "#FFFFFF",
+                        "backgroundColor": "#C11D90",
+                        "displayLabel": true
+                    },
+                    "tags": [
+                        {
+                            "name": "Œufs non inclus",
+                            "type": "egg-free",
+                            "colorHandle": "regular",
+                            "preferences": [
+                                "Classique"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Épicé",
+                            "type": "spicy",
+                            "colorHandle": "spicy",
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Healthy",
+                            "type": "healthy",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Le plein de légumes",
+                            "type": "extra-vegetables",
+                            "colorHandle": "vegan",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Rapide",
+                            "type": "quick",
+                            "colorHandle": "quickPrep",
+                            "preferences": [
+                                "Rapido"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "dinner-bowls",
+                            "type": "dinner-bowls",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Mediterranee",
+                            "type": "mediterranean",
+                            "colorHandle": "calorieSmart",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pork-free",
+                            "type": "pork-free",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Source de fibres",
+                            "type": "source-of-fibre",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "new",
+                            "type": "new",
+                            "colorHandle": "regular",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 3202,
+                        "calories": 765,
+                        "carbohydrate": 48,
+                        "protein": 46.3,
+                        "fat": 40.5
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Lebanese",
+                            "type": "lebanese"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "week": "2026-W37",
+            "menuId": "6a71f9b14d7a11a4be3af95e",
+            "meals": [
+                {
+                    "id": "6a352e044e4b173945bc7578",
+                    "shoppableProductId": "031b36cc-8b44-59cb-9c55-0859c8e1935a",
+                    "name": "Poisson pané \u0026 poireau à la crème",
+                    "headline": "avec sa purée-ciboulette \u0026 une sauce ravigote",
+                    "prepTime": "PT35M",
+                    "totalTime": "PT25M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y26_R205_W37_FR_RFR19211-6main_fish_burger_edit_high-d25c4d45.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/poisson-pane-and-poireau-a-la-creme-6a352e044e4b173945bc7578",
+                    "label": {
+                        "text": "NOUVEAU",
+                        "handle": "nieuw",
+                        "foregroundColor": "#FFFFFF",
+                        "backgroundColor": "#C11D90",
+                        "displayLabel": true
+                    },
+                    "tags": [
+                        {
+                            "name": "Famille",
+                            "type": "family-friendly",
+                            "colorHandle": "familyFriendly",
+                            "preferences": [
+                                "Famille"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "classic-plates",
+                            "type": "classic-plates",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "regional-specialty",
+                            "type": "regional-specialty",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pork-free",
+                            "type": "pork-free",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "new",
+                            "type": "new",
+                            "colorHandle": "regular",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 3442,
+                        "calories": 823,
+                        "carbohydrate": 88.7,
+                        "protein": 26,
+                        "fat": 39.2
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Française",
+                            "type": "french"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a352e2027757fc0a26005d3",
+                    "shoppableProductId": "d78b91ed-5f78-56e4-bee6-d3c59c61e09b",
+                    "name": "Mijoté de poulet aux saveurs du Moyen-Orient",
+                    "headline": "avec des olives Kalamata \u0026 de la semoule",
+                    "prepTime": "PT15M",
+                    "totalTime": "PT15M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y25_R238_W33_FR_QFR20745-6_Main_high-073e8a2c.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/mijote-de-poulet-aux-saveurs-du-moyen-orient-6a352e2027757fc0a26005d3",
+                    "label": {
+                        "text": "Super Rapide",
+                        "handle": "super-quick",
+                        "foregroundColor": "#FFFFFF",
+                        "backgroundColor": "#1A5DB6",
+                        "displayLabel": true
+                    },
+                    "tags": [
+                        {
+                            "name": "\u003c15 min",
+                            "type": "super-quick",
+                            "colorHandle": "quickPrep",
+                            "preferences": [
+                                "Rapido"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Le plein de légumes",
+                            "type": "extra-vegetables",
+                            "colorHandle": "vegan",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Riche en protéines",
+                            "type": "high-protein",
+                            "colorHandle": "glutenFree",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Healthy",
+                            "type": "healthy",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Épicé",
+                            "type": "spicy",
+                            "colorHandle": "spicy",
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "dinner-bowls",
+                            "type": "dinner-bowls",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Mediterranee",
+                            "type": "mediterranean",
+                            "colorHandle": "calorieSmart",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pork-free",
+                            "type": "pork-free",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 2894,
+                        "calories": 692,
+                        "carbohydrate": 76.5,
+                        "protein": 38.6,
+                        "fat": 26.6
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Middle Eastern"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a352e284e4b173945bc75e0",
+                    "shoppableProductId": "ba2a5de2-571c-56a6-a157-41baacd5a280",
+                    "name": "Mijoté vivifiant de dinde au curry",
+                    "headline": "garni de lait de coco \u0026 patate douce",
+                    "prepTime": "PT45M",
+                    "totalTime": "PT15M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y25_R224_W35_FR_RFR19175-39_Main_-3high-f91c0b06.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/mijote-vivifiant-de-dinde-au-curry-6a352e284e4b173945bc75e0",
+                    "tags": [
+                        {
+                            "name": "Peu de vaisselle",
+                            "type": "easy-cleanup",
+                            "colorHandle": "quickPrep",
+                            "preferences": [
+                                "Rapido"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "One Pot",
+                            "type": "one-pot",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "15 min de prépa",
+                            "type": "quick-prep",
+                            "colorHandle": "quickPrep",
+                            "preferences": [
+                                "Rapido"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Épicé",
+                            "type": "spicy",
+                            "colorHandle": "spicy",
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Worldwide",
+                            "type": "worldwide",
+                            "colorHandle": "text",
+                            "preferences": [
+                                "Végétarien",
+                                "Classique",
+                                "Flexitarien",
+                                "Original",
+                                "Rapido",
+                                "Calorie Smart",
+                                "Poisson \u0026 Légumes",
+                                "Famille"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pan-asian-plates",
+                            "type": "pan-asian-plates",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pork-free",
+                            "type": "pork-free",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Curries",
+                            "type": "curries",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 2655,
+                        "calories": 635,
+                        "carbohydrate": 52.6,
+                        "protein": 30.7,
+                        "fat": 33.2
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Thaï",
+                            "type": "thai"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a352dfa4e4b173945bc7553",
+                    "shoppableProductId": "f534ada2-850f-551d-a289-d4a50843c997",
+                    "name": "La Solana : fenouil, tomates \u0026 chorizo grillé",
+                    "headline": "avec des amandes \u0026 du labneh citronné",
+                    "prepTime": "PT15M",
+                    "totalTime": "PT15M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y26_R218_W30_FR_QFR56901-2main_high-db9f3953.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/la-solana-fenouil-tomates-and-chorizo-grille-6a352dfa4e4b173945bc7553",
+                    "label": {
+                        "text": "Super Rapide",
+                        "handle": "super-quick",
+                        "foregroundColor": "#FFFFFF",
+                        "backgroundColor": "#1A5DB6",
+                        "displayLabel": true
+                    },
+                    "tags": [
+                        {
+                            "name": "\u003c15 min",
+                            "type": "super-quick",
+                            "colorHandle": "quickPrep",
+                            "preferences": [
+                                "Rapido"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Le plein de légumes",
+                            "type": "extra-vegetables",
+                            "colorHandle": "vegan",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Healthy",
+                            "type": "healthy",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Calorie Smart",
+                            "type": "calorie-smart",
+                            "colorHandle": "calorieSmart",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "dinner-bowls",
+                            "type": "dinner-bowls",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "regional-specialty",
+                            "type": "regional-specialty",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 2269,
+                        "calories": 542,
+                        "carbohydrate": 18.9,
+                        "protein": 18.7,
+                        "fat": 43.2
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Française",
+                            "type": "french"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a5f35b275e3b6f4db5c78a4",
+                    "shoppableProductId": "0b31b072-b1aa-57c8-bcc1-6b2e8f936272",
+                    "name": "Gnocchi, lardons \u0026 légumes au pesto",
+                    "headline": "avec de la mozzarella râpée \u0026 de l'origan",
+                    "prepTime": "PT25M",
+                    "totalTime": "PT25M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y26_R235_W20_FR_QFR40598-2_Main_high-989bf178.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/gnocchi-lardons-and-legumes-au-pesto-6a5f35b275e3b6f4db5c78a4",
+                    "tags": [
+                        {
+                            "name": "Rapide",
+                            "type": "quick",
+                            "colorHandle": "quickPrep",
+                            "preferences": [
+                                "Rapido"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Famille",
+                            "type": "family-friendly",
+                            "colorHandle": "familyFriendly",
+                            "preferences": [
+                                "Famille"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pasta-noodles",
+                            "type": "pasta-noodles",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Mediterranee",
+                            "type": "mediterranean",
+                            "colorHandle": "calorieSmart",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 3452,
+                        "calories": 825,
+                        "carbohydrate": 71,
+                        "protein": 26,
+                        "fat": 47.7
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Italienne",
+                            "type": "italian"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a352e6327757fc0a26006b7",
+                    "shoppableProductId": "12c5f470-42a3-5aaa-be51-ee5db2883f45",
+                    "name": "Penne au bœuf \u0026 sauce cheddar crémeuse",
+                    "headline": "avec des épices BBQ \u0026 de la courgette",
+                    "prepTime": "PT25M",
+                    "totalTime": "PT25M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y26_R246_W37_FR_RFR54413-6main_high-90720537.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/penne-au-boeuf-and-sauce-cheddar-cremeuse-6a352e6327757fc0a26006b7",
+                    "label": {
+                        "text": "NOUVEAU",
+                        "handle": "nieuw",
+                        "foregroundColor": "#FFFFFF",
+                        "backgroundColor": "#C11D90",
+                        "displayLabel": true
+                    },
+                    "tags": [
+                        {
+                            "name": "Famille",
+                            "type": "family-friendly",
+                            "colorHandle": "familyFriendly",
+                            "preferences": [
+                                "Famille"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Rapide",
+                            "type": "quick",
+                            "colorHandle": "quickPrep",
+                            "preferences": [
+                                "Rapido"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "pasta-noodles",
+                            "type": "pasta-noodles",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "world-flavors",
+                            "type": "world-flavors",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pork-free",
+                            "type": "pork-free",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "new",
+                            "type": "new",
+                            "colorHandle": "regular",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 3249,
+                        "calories": 776,
+                        "carbohydrate": 82.2,
+                        "protein": 42.4,
+                        "fat": 30.4
+                    },
+                    "cuisines": [
+                        {
+                            "name": "American"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "week": "2026-W36",
+            "menuId": "6a6890882d14220a990c0aab",
+            "meals": [
+                {
+                    "id": "69f1165ca9f41d8163558638",
+                    "shoppableProductId": "4e4af2a5-87f5-57ba-a05e-b1d431641472",
+                    "name": "La Salina : thon, olives \u0026 grenailles",
+                    "headline": "garnie de fromage frais, haricots \u0026 aneth",
+                    "prepTime": "PT25M",
+                    "totalTime": "PT15M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y23_R215_W30_FR_RFR16631758-3_Main-2high-26871fa0.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/la-salina-thon-olives-and-grenailles-69f1165ca9f41d8163558638",
+                    "tags": [
+                        {
+                            "name": "Peu de vaisselle",
+                            "type": "easy-cleanup",
+                            "colorHandle": "quickPrep",
+                            "preferences": [
+                                "Rapido"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Rapide",
+                            "type": "quick",
+                            "colorHandle": "quickPrep",
+                            "preferences": [
+                                "Rapido"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "dinner-bowls",
+                            "type": "dinner-bowls",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Mediterranee",
+                            "type": "mediterranean",
+                            "colorHandle": "calorieSmart",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pork-free",
+                            "type": "pork-free",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Source de fibres",
+                            "type": "source-of-fibre",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 2424,
+                        "calories": 579,
+                        "carbohydrate": 56.8,
+                        "protein": 31.7,
+                        "fat": 23.8
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Grecque",
+                            "type": "greek"
+                        }
+                    ]
+                },
+                {
+                    "id": "69f11656a9f41d8163558614",
+                    "shoppableProductId": "7af5afb3-42df-526a-9829-18192d2802b9",
+                    "name": "Lieu doré, purée \u0026 poivrons confits",
+                    "headline": "avec du thym \u0026 des olives Kalamata",
+                    "prepTime": "PT45M",
+                    "totalTime": "PT25M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y26_R216_W36_FR_QFR20514-8main_balanced_edit_edit_high-bcf0568a.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/lieu-dore-puree-and-poivrons-confits-69f11656a9f41d8163558614",
+                    "label": {
+                        "text": "Pépite du Moment",
+                        "handle": "customer-favourite",
+                        "foregroundColor": "#FFFFFF",
+                        "backgroundColor": "#067A46",
+                        "displayLabel": true
+                    },
+                    "tags": [
+                        {
+                            "name": "Calorie Smart",
+                            "type": "calorie-smart",
+                            "colorHandle": "calorieSmart",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Healthy",
+                            "type": "healthy",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pescatarian",
+                            "type": "pescatarian",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "bestseller",
+                            "type": "bestseller",
+                            "colorHandle": "familyFriendly",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "classic-plates",
+                            "type": "classic-plates",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "world-flavors",
+                            "type": "world-flavors",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pork-free",
+                            "type": "pork-free",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 2709,
+                        "calories": 648,
+                        "carbohydrate": 60.6,
+                        "protein": 30,
+                        "fat": 30.8
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Fusion",
+                            "type": "fusion"
+                        }
+                    ]
+                },
+                {
+                    "id": "69f1165ad52e296f6a3852ed",
+                    "shoppableProductId": "b5df5236-87f8-5ac6-b7bd-8da7eb1c6b07",
+                    "name": "La Chèvre Chaud : betterave \u0026 bacon",
+                    "headline": "avec des graines de tournesol \u0026 un petit pain",
+                    "prepTime": "PT25M",
+                    "totalTime": "PT15M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y25_R221_W48_FR_QFR17585-61_Main_high-c3deb46c.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/la-chevre-chaud-betterave-and-bacon-69f1165ad52e296f6a3852ed",
+                    "label": {
+                        "text": "Pépite du Moment",
+                        "handle": "customer-favourite",
+                        "foregroundColor": "#FFFFFF",
+                        "backgroundColor": "#067A46",
+                        "displayLabel": true
+                    },
+                    "tags": [
+                        {
+                            "name": "Rapide",
+                            "type": "quick",
+                            "colorHandle": "quickPrep",
+                            "preferences": [
+                                "Rapido"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "bestseller",
+                            "type": "bestseller",
+                            "colorHandle": "familyFriendly",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "dinner-bowls",
+                            "type": "dinner-bowls",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "regional-specialty",
+                            "type": "regional-specialty",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 2488,
+                        "calories": 595,
+                        "carbohydrate": 38.7,
+                        "protein": 23.2,
+                        "fat": 38.1
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Française",
+                            "type": "french"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a0d63f4099c5b8fd89cb15b",
+                    "shoppableProductId": "2a5e78c5-d114-5884-816f-1fa2d5024d02",
+                    "name": "Rentrée épicée : dinde sautée façon Kung Pao",
+                    "headline": "garnie de gingembre, cacahuètes \u0026 sauce hoisin",
+                    "prepTime": "PT25M",
+                    "totalTime": "PT25M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y25_R218_W38_FR_QFR29804082-23_blanced_edit_Mainhigh-2d656438.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/rentree-epicee-dinde-sautee-facon-kung-pao-6a0d63f4099c5b8fd89cb15b",
+                    "tags": [
+                        {
+                            "name": "Calorie Smart",
+                            "type": "calorie-smart",
+                            "colorHandle": "calorieSmart",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Healthy",
+                            "type": "healthy",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Riche en protéines",
+                            "type": "high-protein",
+                            "colorHandle": "glutenFree",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Rapide",
+                            "type": "quick",
+                            "colorHandle": "quickPrep",
+                            "preferences": [
+                                "Rapido"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Épicé",
+                            "type": "spicy",
+                            "colorHandle": "spicy",
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "Worldwide",
+                            "type": "worldwide",
+                            "colorHandle": "text",
+                            "preferences": [
+                                "Végétarien",
+                                "Classique",
+                                "Flexitarien",
+                                "Original",
+                                "Rapido",
+                                "Calorie Smart",
+                                "Poisson \u0026 Légumes",
+                                "Famille"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Choix de la rentrée",
+                            "type": "back-to-school",
+                            "colorHandle": "familyFriendly",
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "classic-plates",
+                            "type": "classic-plates",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pan-asian-plates",
+                            "type": "pan-asian-plates",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pork-free",
+                            "type": "pork-free",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 2712,
+                        "calories": 648,
+                        "carbohydrate": 86.2,
+                        "protein": 42.6,
+                        "fat": 16.6
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Chinoise",
+                            "type": "chinese"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a105bf6b2ced23672006e46",
+                    "shoppableProductId": "b1c38d13-150c-5735-b863-b2be08cee68e",
+                    "name": "Paupiette de veau \u0026 sauce aux prunes du bistro",
+                    "headline": "avec des légumes rôtis aux herbes de Provence",
+                    "prepTime": "PT50M",
+                    "totalTime": "PT30M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y24_R232_W37_FR_RFR23457-1_edit_color_MAIN_cocorico_edit_high-9a824784.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/paupiette-de-veau-and-sauce-aux-prunes-du-bistro-6a105bf6b2ced23672006e46",
+                    "label": {
+                        "text": "Cocorico",
+                        "handle": "regional",
+                        "foregroundColor": "#FFFFFF",
+                        "backgroundColor": "#1A5DB6",
+                        "displayLabel": true
+                    },
+                    "tags": [
+                        {
+                            "name": "Bistrot",
+                            "type": "bistrot",
+                            "colorHandle": "text",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "ineligible-reco",
+                            "type": "ineligible-for-recommendation",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "classic-plates",
+                            "type": "classic-plates",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "regional-specialty",
+                            "type": "regional-specialty",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pork-free",
+                            "type": "pork-free",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 3321,
+                        "calories": 794,
+                        "carbohydrate": 77,
+                        "protein": 31.7,
+                        "fat": 40.3
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Française",
+                            "type": "french"
+                        }
+                    ]
+                },
+                {
+                    "id": "6a0d63e9bff716338a6d4a32",
+                    "shoppableProductId": "18a084b0-69a3-57cd-afab-01514b82b19b",
+                    "name": "Poulet doré au zaatar \u0026 sauce blanche",
+                    "headline": "avec des poivrons confits \u0026 du boulgour",
+                    "prepTime": "PT30M",
+                    "totalTime": "PT30M",
+                    "image": "https://img.hellofresh.com/q_auto/recipes/image/HF_Y25_R220_W33_FR_RFR42037-7_MAIN_edit2_high-4986e99c.jpg",
+                    "websiteURL": "https://www.hellofresh.fr/recipes/poulet-dore-au-zaatar-and-sauce-blanche-6a0d63e9bff716338a6d4a32",
+                    "tags": [
+                        {
+                            "name": "Worldwide",
+                            "type": "worldwide",
+                            "colorHandle": "text",
+                            "preferences": [
+                                "Végétarien",
+                                "Classique",
+                                "Flexitarien",
+                                "Original",
+                                "Rapido",
+                                "Calorie Smart",
+                                "Poisson \u0026 Légumes",
+                                "Famille"
+                            ],
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Healthy",
+                            "type": "healthy",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Riche en protéines",
+                            "type": "high-protein",
+                            "colorHandle": "glutenFree",
+                            "preferences": [
+                                "Nutri+"
+                            ],
+                            "displayLabel": true
+                        },
+                        {
+                            "name": "dinner-bowls",
+                            "type": "dinner-bowls",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Mediterranee",
+                            "type": "mediterranean",
+                            "colorHandle": "calorieSmart",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "pork-free",
+                            "type": "pork-free",
+                            "displayLabel": false
+                        },
+                        {
+                            "name": "Source de fibres",
+                            "type": "source-of-fibre",
+                            "displayLabel": false
+                        }
+                    ],
+                    "nutrition": {
+                        "energy": 3012,
+                        "calories": 720,
+                        "carbohydrate": 74.8,
+                        "protein": 42.5,
+                        "fat": 30.6
+                    },
+                    "cuisines": [
+                        {
+                            "name": "Middle Eastern"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
